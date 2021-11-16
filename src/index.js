@@ -6,7 +6,7 @@ import "./assets/boxicons-2.0.7/css/boxicons.min.css";
 import "./assets/css/grid.css";
 import "./assets/css/index.css";
 
-document.title = "Web admin self learned";
+document.title = "Web Admin";
 
 ReactDOM.render(
   <React.StrictMode>
