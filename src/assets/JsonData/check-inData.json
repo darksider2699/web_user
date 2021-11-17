@@ -1,17 +1,17 @@
 [
-{"id":1,"name":"Viet Anh","role":"Dev","department":"PCT-3rd","phoneNumber":"0786662297","email":"dut.vietanh269@gmail.com","isCheckin":true},
+{"id":1,"name":"Viet Anh","role":"Dev","department":"PCT-3rd","phoneNumber":"0786662297","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1},
 {"id":2,"name":"Phan Ben","role":"Dev","department":"PCT-1st","phoneNumber":"0786662298","email":"dut.vietanh269@gmail.com","isCheckin":false},
-{"id":3,"name":"Tuan Hai","role":"Dev","department":"PCT-2nd","phoneNumber":"0786662299","email":"dut.vietanh269@gmail.com","isCheckin":true},
+{"id":3,"name":"Tuan Hai","role":"Dev","department":"PCT-2nd","phoneNumber":"0786662299","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1},
 {"id":4,"name":"Van Ben","role":"Dev","department":"PT-3rd","phoneNumber":"0786662287","email":"dut.vietanh269@gmail.com","isCheckin":false},
-{"id":5,"name":"Trang Phan","role":"QA","department":"PT-1st","phoneNumber":"0786662277","email":"dut.vietanh269@gmail.com","isCheckin":true},
+{"id":5,"name":"Trang Phan","role":"QA","department":"PT-1st","phoneNumber":"0786662277","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1},
 {"id":6,"name":"Tra My","role":"QA","department":"PCT-4th","phoneNumber":"0786662267","email":"dut.vietanh269@gmail.com","isCheckin":false},
-{"id":7,"name":"Bi Bi","role":"BA","department":"PCT-3rd","phoneNumber":"0786662257","email":"dut.vietanh269@gmail.com","isCheckin":true},
-{"id":8,"name":"Ron Phan","role":"BA","department":"PCT-4th","phoneNumber":"0786662397","email":"dut.vietanh269@gmail.com","isCheckin":true},
+{"id":7,"name":"Bi Bi","role":"BA","department":"PCT-3rd","phoneNumber":"0786662257","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":2},
+{"id":8,"name":"Ron Phan","role":"BA","department":"PCT-4th","phoneNumber":"0786662397","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1},
 {"id":9,"name":"Huy Phan","role":"Dev","department":"PCT-2nd","phoneNumber":"0786661297","email":"dut.vietanh269@gmail.com","isCheckin":false},
-{"id":10,"name":"Tran Tien","role":"Dev","department":"PCT-3rd","phoneNumber":"0786262297","email":"dut.vietanh269@gmail.com","isCheckin":true},
+{"id":10,"name":"Tran Tien","role":"Dev","department":"PCT-3rd","phoneNumber":"0786262297","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1},
 {"id":11,"name":"Nguyen Tien","role":"Dev","department":"PT-2nd","phoneNumber":"0784662297","email":"dut.vietanh269@gmail.com","isCheckin":false},
-{"id":12,"name":"Viet Thang","role":"HR","department":"PT-1st","phoneNumber":"0786652297","email":"dut.vietanh269@gmail.com","isCheckin":true},
+{"id":12,"name":"Viet Thang","role":"HR","department":"PT-1st","phoneNumber":"0786652297","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1},
 {"id":13,"name":"Hau Phan","role":"HR","department":"PT-2nd","phoneNumber":"0786662697","email":"dut.vietanh269@gmail.com","isCheckin":false},
-{"id":14,"name":"Ngoc Quyen","role":"HR","department":"PT-3rd","phoneNumber":"0786682297","email":"dut.vietanh269@gmail.com","isCheckin":true},
-{"id":15,"name":"Anh Nguyet","role":"HR","department":"PT-3rd","phoneNumber":"0786602297","email":"dut.vietanh269@gmail.com","isCheckin":true}
+{"id":14,"name":"Ngoc Quyen","role":"HR","department":"PT-3rd","phoneNumber":"0786682297","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":2},
+{"id":15,"name":"Anh Nguyet","role":"HR","department":"PT-3rd","phoneNumber":"0786602297","email":"dut.vietanh269@gmail.com","isCheckin":true,"result":1}
 ]

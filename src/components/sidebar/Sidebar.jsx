@@ -23,9 +23,9 @@ const Sidebar = (props) => {
   );
   return (
     <div className="sidebar">
-      <div className="sidebar__logo">
-        <img src={logo} alt="viet anh dep zai hihi" />
-      </div>
+       <div className="sidebar__logo">
+      {/*  <img src={logo} alt="viet anh dep zai hihi" />*/}
+      </div> 
       {sidebar_item.map((item, index) => (
         <Link to={item.route} key={index}>
           <SidebarItem

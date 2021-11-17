@@ -5,14 +5,14 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@material-ui/core/LinearProgress";
 import { Bar } from "react-chartjs-2";
-import checkinData from "../assets/JsonData/check-inData.json";
+import checkinData from "../../assets/JsonData/check-inData.json";
 import MUIDataTable from "mui-datatables";
 import Grow from "@mui/material/Grow";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-import "./Overview.css";
+import "./styles.css";
 
-const Customer = () => {
+const Overview = () => {
   const state = {
     labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     datasets: [
@@ -47,7 +47,7 @@ const Customer = () => {
   const columns = [
     {
       name: "name",
-      label: "Tên",
+      label: "Name",
       options: {
         filter: true,
         sort: true,
@@ -55,7 +55,7 @@ const Customer = () => {
     },
     {
       name: "role",
-      label: "Chức vụ",
+      label: "Role",
       options: {
         filter: true,
         sort: true,
@@ -63,7 +63,7 @@ const Customer = () => {
     },
     {
       name: "department",
-      label: "Chỗ ngồi",
+      label: "Department",
       options: {
         filter: false,
         sort: true,
@@ -71,7 +71,7 @@ const Customer = () => {
     },
     {
       name: "phoneNumber",
-      label: "ĐT liên lạc",
+      label: "Phone Number",
       options: {
         filter: false,
         sort: true,
@@ -87,14 +87,33 @@ const Customer = () => {
     },
     {
       name: "isCheckin",
-      label: "Trạng thái",
+      label: "Checkin Status",
       options: {
         filter: false,
         sort: true,
         customBodyRender: (value) => {
           return (
             <div className={`${value === true ? "green" : "red"}`}>
-              {value === true ? "Mở" : "Khoá"}
+              {value === true ? (
+                <i class="bx bx-check-circle"></i>
+              ) : (
+                <i class="bx bxs-hourglass-top"></i>
+              )}
+            </div>
+          );
+        },
+      },
+    },
+    {
+      name: "result",
+      label: "Result",
+      options: {
+        filter: false,
+        sort: true,
+        customBodyRender: (value) => {
+          return (
+            <div className={`${value === 1 ? "green" : "red"}`}>
+              {value === 1 ? "Come" : value === 2 ? "Not Come" : "-"}
             </div>
           );
         },
@@ -102,14 +121,12 @@ const Customer = () => {
     },
   ];
   const options = {
-    filter: false,
+    filter: true,
     selectableRows: "none",
     onRowClick: null,
-    serverSide: true,
     jumpToPage: true,
-    searchPlaceholder: "Tìm kiếm theo tên hoặc tài khoản",
+    searchPlaceholder: "Search",
     //count, // Use total number of items
-    onTableChange: (action, tableState) => {},
   };
   return (
     <div>
@@ -144,8 +161,8 @@ const Customer = () => {
           Checkin Progress today (%)
         </Typography>
       </Box>
-      <Box marginTop={3} marginBottom={3} >
-        <Box width={'90%'} paddingLeft={'10%'}>
+      <Box marginTop={3} marginBottom={3}>
+        <Box width={"90%"} paddingLeft={"10%"}>
           <Bar
             data={state}
             options={{
@@ -166,7 +183,7 @@ const Customer = () => {
       <Box marginLeft={0} display={isShowTable ? "block" : "none"}>
         <ThemeProvider theme={theme}>
           <MUIDataTable
-            title={"Danh sách tài khoản trong hệ thống"}
+            title={"Checkin List"}
             data={checkinData}
             columns={columns}
             options={options}
@@ -177,4 +194,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default Overview;

@@ -4,16 +4,15 @@
         "route": "/",
         "icon": "bx bx-pie-chart-alt"
     },
-    
     {
-        "display_name": "Dashboard",
-        "route": "/dashboard",
-        "icon": "bx bx-category-alt"
+        "display_name": "Covid Test",
+        "route": "/covid_test",
+        "icon": "bx bx-test-tube"
     },
     {
-        "display_name": "Products",
-        "route": "/products",
-        "icon": "bx bx-package"
+        "display_name": "Checkin Question",
+        "route": "/questions",
+        "icon": "bx bx-task"
     },
     {
         "display_name": "Orders",
