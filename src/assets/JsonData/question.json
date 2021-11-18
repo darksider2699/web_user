@@ -1,26 +1,78 @@
 [
   {
+    "id": 1,
     "question": "Have you ever visited these place recently: Nai Hien Dong, An Hai Bac, Hoa Khanh Nam?",
-    "answer1": "Yes",
-    "answer2": "No",
-    "rightAnswer":0
+    "answers": [
+      {
+        "answerId": 1,
+        "questionId": 1,
+        "value": 1,
+        "label": "Yes"
+      },
+      {
+        "answerId": 2,
+        "questionId": 1,
+        "value": 2,
+        "label": "No"
+      }
+    ],
+    "rightAnswer": 1
   },
   {
+    "id": 2,
     "question": "Do you have any of these symptoms? Fever or chills/ Cough/ Shortness of breath or difficulty breathing/ Fatigue/ Muscle or body aches/ Headache/ New loss of taste or smell/ Sore throat/ Congestion or runny nose/ Nausea or vomiting/ Diarrhea",
-    "answer1": "Yes",
-    "answer2": "No",
-    "rightAnswer":0
+    "answers": [
+      {
+        "answerId": 1,
+        "questionId": 2,
+        "value": 1,
+        "label": "Yes"
+      },
+      {
+        "answerId": 2,
+        "questionId": 2,
+        "value": 2,
+        "label": "No"
+      }
+    ],
+    "rightAnswer": 1
   },
   {
+    "id": 3,
     "question": "Have you left Da Nang recently?",
-    "answer1": "Yes",
-    "answer2": "No",
-    "rightAnswer":0
+    "answers": [
+      {
+        "answerId": 1,
+        "questionId": 2,
+        "value": 1,
+        "label": "Yes"
+      },
+      {
+        "answerId": 2,
+        "questionId": 2,
+        "value": 2,
+        "label": "No"
+      }
+    ],
+    "rightAnswer": 1
   },
   {
+    "id": 4,
     "question": "Do you meet HR team yesterday?",
-    "answer1": "Yes",
-    "answer2": "No",
-    "rightAnswer":0
+    "answers": [
+      {
+        "answerId": 1,
+        "questionId": 3,
+        "value": 1,
+        "label": "Yes"
+      },
+      {
+        "answerId": 2,
+        "questionId": 3,
+        "value": 2,
+        "label": "No"
+      }
+    ],
+    "rightAnswer": 1
   }
 ]
