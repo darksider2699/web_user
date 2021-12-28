@@ -1,0 +1,40 @@
+[
+  {
+    "patientId": 1,
+    "date": "11-3-2021",
+    "status": {
+      "value": 0,
+      "label": "F0"
+    },
+    "contact": [
+      {
+        "userId": 2,
+        "name": "Phan Ben",
+        "role": "Dev",
+        "department": "PCT-1st",
+        "phoneNumber": "0786662298",
+        "email": "dut.vietanh269@gmail.com",
+        "date":"2-14-2021"
+      }
+    ]
+  },
+  {
+    "patientId": 2,
+    "date": "11-22-2021",
+    "status": {
+      "value": 1,
+      "label": "F1"
+    },
+    "contact": [
+      {
+        "userId": 2,
+        "name": "Phan Ben",
+        "role": "Dev",
+        "department": "PCT-1st",
+        "phoneNumber": "0786662298",
+        "email": "dut.vietanh269@gmail.com",
+        "date":"2-14-2021"
+      }
+    ]
+  }
+]

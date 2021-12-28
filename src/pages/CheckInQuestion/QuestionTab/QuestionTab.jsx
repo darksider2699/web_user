@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@material-ui/core/";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 
 const QuestionTab = ({ question }) => {
   const [listAnswer, setListAnswer] = useState([...question.answers]);
-
+  const [correctAnswer, setCorrectAnswer] = useState(1);
   const handleAnswerChange = (event) => {
     console.log("original", listAnswer);
     console.log(event.currentTarget);
@@ -33,6 +36,9 @@ const QuestionTab = ({ question }) => {
         break;
     }
   };
+  const handleChange =(event) =>{
+    setCorrectAnswer(event.target.value);
+  }
   return (
     <Box
       key={question.id + "box"}
@@ -81,15 +87,43 @@ const QuestionTab = ({ question }) => {
           </Box>
         );
       })}
-      <Button
-        variant="outlined"
-        color="primary"
-        style={{ margin: "10px 0 10px 10px " }}
-        name="add"
-        onClick={handleAnswerChange}
-      >
-        Add Question
-      </Button>
+      <Box>
+        <FormControl  style={{marginLeft:'12px', width:"200px", marginRight:"10px"}}>
+          <InputLabel id="demo-simple-select-label">Correct Answer</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={correctAnswer}
+            label="CorrectAnswer"
+            onChange={handleChange}
+            
+          >
+           {listAnswer.map(index=>{
+             return <MenuItem value={index.value}>{index.label}</MenuItem>
+           })}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box display={"flex"} justifyContent={"space-between"}>
+        <Button
+          variant="outlined"
+          color="primary"
+          style={{ margin: "10px 0 10px 10px " }}
+          name="add"
+          onClick={handleAnswerChange}
+        >
+          Add Answer
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          style={{ margin: "10px 25px 10px 10px " }}
+          name="add"
+          onClick={handleAnswerChange}
+        >
+          save
+        </Button>
+      </Box>
     </Box>
   );
 };

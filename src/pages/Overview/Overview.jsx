@@ -49,7 +49,7 @@ const Overview = () => {
       name: "name",
       label: "Name",
       options: {
-        filter: true,
+        filter: false,
         sort: true,
       },
     },
@@ -65,7 +65,7 @@ const Overview = () => {
       name: "department",
       label: "Department",
       options: {
-        filter: false,
+        filter: true,
         sort: true,
       },
     },
@@ -89,7 +89,7 @@ const Overview = () => {
       name: "isCheckin",
       label: "Checkin Status",
       options: {
-        filter: false,
+        filter: true,
         sort: true,
         customBodyRender: (value) => {
           return (
@@ -108,7 +108,7 @@ const Overview = () => {
       name: "result",
       label: "Result",
       options: {
-        filter: false,
+        filter: true,
         sort: true,
         customBodyRender: (value) => {
           return (
@@ -123,6 +123,7 @@ const Overview = () => {
   const options = {
     filter: true,
     selectableRows: "none",
+    print:false,
     onRowClick: null,
     jumpToPage: true,
     searchPlaceholder: "Search",
