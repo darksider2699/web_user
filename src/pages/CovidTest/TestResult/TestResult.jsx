@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@material-ui/core/";
 
-const TestResult = ({date,numberOfNegative,onClickRow}) => {
-    const employeeNumber = 100
+const TestResult = ({date,numberOfNegative,total,onClickRow}) => {
     const handleOnClick = ()=>{
       onClickRow(date);
     }
@@ -11,7 +10,7 @@ const TestResult = ({date,numberOfNegative,onClickRow}) => {
       <Typography style={{padding: '10px 0 10px 10px ',fontWeight:'700'}}>{`Date: ${date}` }</Typography>
       <Box style={{padding: '10px 10px 10px 0 ', alignSelf:'flex-end', display:'flex'}}>
       <p style={{padding:'2px 5px',fontWeight:'700'}}>Result:</p>
-      <Typography style={{color: `${numberOfNegative === employeeNumber ?'green':'red'}`}}>{`${numberOfNegative}/${employeeNumber} Negative` }</Typography>
+      <Typography style={{color: `${numberOfNegative === total ?'green':'red'}`}}>{`${numberOfNegative}/${total} Negative` }</Typography>
       </Box>
     </Box>
   );

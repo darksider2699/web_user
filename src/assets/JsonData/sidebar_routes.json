@@ -10,7 +10,7 @@
         "icon": "bx bx-test-tube"
     },
     {
-        "display_name": "Checkin Question",
+        "display_name": "Manage Question",
         "route": "/questions",
         "icon": "bx bx-task"
     },

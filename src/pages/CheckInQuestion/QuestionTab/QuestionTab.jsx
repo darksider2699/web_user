@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@material-ui/core/";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
@@ -11,8 +10,7 @@ const QuestionTab = ({ question }) => {
   const [listAnswer, setListAnswer] = useState([...question.answers]);
   const [correctAnswer, setCorrectAnswer] = useState(1);
   const handleAnswerChange = (event) => {
-    console.log("original", listAnswer);
-    console.log(event.currentTarget);
+    console.log( event.currentTarget.id);
     let type = event.currentTarget.getAttribute("name");
     switch (type) {
       case "add":
@@ -23,12 +21,15 @@ const QuestionTab = ({ question }) => {
       case "delete":
         let delArr = [...listAnswer];
         let indexDelete = delArr.findIndex(
-          (e) => e.value === event.currentTarget.id
+          (e) => e.value+'' === event.currentTarget.id
         );
         delArr.splice(indexDelete, 1);
+        console.log({ indexDelete, delArr });
         delArr.map((index) => {
           index.value = delArr.findIndex((e) => e.value === index.value) + 1;
         });
+        console.log({delArr });
+
         setListAnswer([...delArr]);
         break;
 
@@ -66,7 +67,7 @@ const QuestionTab = ({ question }) => {
             >{`Answer ${answer.value}`}</Typography>
             <Box display={"flex"}>
               <TextField
-                defaultValue={answer.label || "Add Answer Here..."}
+                value={answer.label || "Add Answer Here..."}
                 fullWidth
                 style={{ padding: "10px 10px 10px 10px" }}
                 variant="outlined"

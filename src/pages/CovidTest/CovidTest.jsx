@@ -1,16 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@material-ui/core/";
+import { Box } from "@material-ui/core/";
 import TestResult from "./TestResult/TestResult";
 import Button from "@mui/material/Button";
 import moment from "moment";
-import data from "../../assets/JsonData/covidTest.json";
 import "./styles.css";
 import MUIDataTable from "mui-datatables";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import user_testing_data from "../../assets/JsonData/covid_test_result.json";
+export default function CovidTest() {
+  const [data, setData] = useState();
 
-const CovidTest = () => {
+  useEffect(() => {
+    console.log("HI")
+    getAllTestResult((output) => {
+      if (output) {
+        setData(output);
+        console.log(output);
+      }
+    }); 
+  }, []);
+  async function getAllTestResult(resolve = () => {}) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/test_result/all_result`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLYXRyaW5hV2FnbmVyOCIsImlhdCI6MTY0MTE0NTc5NywiZXhwIjoxNjQxMjMyMTk3fQ.LFU3d6N0i9O3YOBloFlLqcvO9IkZOZ8XsWZdzQWjm2VofFxagJVg-rtHkoHEH5-A31jng0s9jjejgtHwjY9B8Q`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      const data_1 = await response.json();
+      resolve(data_1);
+    } catch (error) {
+    }
+  }
+
+ 
   let theme = createTheme();
   theme = responsiveFontSizes(theme);
   const [dateSelected, setDateSelected] = useState();
@@ -120,8 +149,9 @@ const CovidTest = () => {
           <TestResult
             key={index.id}
             onClickRow={onClickRow}
-            numberOfNegative={index.numberOfNegative}
-            date={moment(new Date(index.date)).format("DD-MM-YYYY")}
+            numberOfNegative={index.negative}
+            date={moment(new Date(index.dateRecord)).format("DD-MM-YYYY")}
+            total = {index.total}
           ></TestResult>
         ))}
       </Box>
@@ -144,4 +174,4 @@ const CovidTest = () => {
   );
 };
 
-export default CovidTest;
+//export default CovidTest;

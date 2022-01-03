@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { withStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core/";
 import LinearProgress, {
-  linearProgressClasses,
 } from "@material-ui/core/LinearProgress";
 import { Bar } from "react-chartjs-2";
 import checkinData from "../../assets/JsonData/check-inData.json";
 import MUIDataTable from "mui-datatables";
-import Grow from "@mui/material/Grow";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import "./styles.css";
