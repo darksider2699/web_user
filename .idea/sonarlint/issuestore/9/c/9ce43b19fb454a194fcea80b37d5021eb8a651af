@@ -1,0 +1,9 @@
+
+Ljavascript:S1128"+Remove this unused import of 'checkinData'.(ë¬û¸ùÿÿÿÿ
+Ajavascript:S1186" Unexpected empty arrow function.(ÉÈ‚êþÿÿÿÿ
+ujavascript:S3776*"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(Ðý‰Øþÿÿÿÿ
+zjavascript:S1488+"^Immediately return this expression instead of assigning it to the temporary variable "result".(ÎÅ¡¨
+`javascript:S3358/"DExtract this nested ternary operation into an independent statement.(ä˜£¢
+`javascript:S3358C"DExtract this nested ternary operation into an independent statement.(ä˜£¢
+Pjavascript:S1117^"/'theme' is already declared in the upper scope.(¡­¨±øÿÿÿÿ
+ajavascript:S3358¯"DExtract this nested ternary operation into an independent statement.(÷‹ƒ¤
