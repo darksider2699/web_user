@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core/";
-import LinearProgress, {
-} from "@material-ui/core/LinearProgress";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { Bar } from "react-chartjs-2";
 import checkinData from "../../assets/JsonData/check-inData.json";
 import MUIDataTable from "mui-datatables";
@@ -11,6 +10,68 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import "./styles.css";
 
 const Overview = () => {
+  const [data, setData] = useState();
+
+  async function getAllMedicalInformation(resolve = () => {}) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/user/medical_user/daily_checkin/all`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLYXRyaW5hV2FnbmVyOCIsImlhdCI6MTY0MTYzMzUyMiwiZXhwIjoxNjQxNzE5OTIyfQ.YgGuGTOwPSBYIzZ3PCCH3YJ88tCvnL18sTVtf3_b2rcdCI2_o73qMS_k2yi79H05tOAezx1Ne_B0Bny4GAD_3g`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      const data_1 = await response.json();
+      resolve(data_1);
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    getAllMedicalInformation((output) => {
+      if (output) {
+        setData(output);
+        console.log(output);
+      }
+    });
+  }, []);
+
+  const convertDataForTableUser = (input) => {
+    let result = input?.map((value, index) => {
+      console.log(          new Date().getDate() ===  new Date(value.lastCheckin?.dateRecord).getDate() &&
+      new Date().getMonth() === new Date(value.lastCheckin?.dateRecord).getMonth() &&
+      new Date().getFullYear() === new Date(value.lastCheckin?.dateRecord).getFullYear()
+        ? value.lastCheckin?.isAllowToCome
+          ? true
+          : false
+        : false)
+      return {
+        name: value.user.lastName + " " + value.user.firstName,
+        jobTitle: value.user.companyUserInformation.jobTitles[0]?.name ? value.user.companyUserInformation.jobTitles[0]?.name : "--",
+        department: value.user.companyUserInformation.department?.name
+          ? value.user.companyUserInformation.department?.name
+          : "--",
+        phoneNumber: value.user.phoneNumber ? value.user.phoneNumber : "--",
+        email: value.user.companyUserInformation.companyEmail,
+        isCheckin:
+          new Date().getDate() === new Date(value.lastCheckin?.dateRecord).getDate() &&
+          new Date().getMonth() === new Date(value.lastCheckin?.dateRecord).getMonth() &&
+          new Date().getFullYear() === new Date(value.lastCheckin?.dateRecord).getFullYear(),
+        result:
+          new Date().getDate() ===  new Date(value.lastCheckin?.dateRecord).getDate() &&
+          new Date().getMonth() === new Date(value.lastCheckin?.dateRecord).getMonth() &&
+          new Date().getFullYear() === new Date(value.lastCheckin?.dateRecord).getFullYear()
+            ? value.lastCheckin?.isAllowToCome
+              ? true
+              : false
+            : false,
+      };
+    });
+    return result;
+  };
   const state = {
     labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     datasets: [
@@ -52,8 +113,8 @@ const Overview = () => {
       },
     },
     {
-      name: "role",
-      label: "Role",
+      name: "jobTitle",
+      label: "Job Title",
       options: {
         filter: true,
         sort: true,
@@ -93,9 +154,9 @@ const Overview = () => {
           return (
             <div className={`${value === true ? "green" : "red"}`}>
               {value === true ? (
-                <i class="bx bx-check-circle"></i>
+                <i className="bx bx-check-circle"></i>
               ) : (
-                <i class="bx bxs-hourglass-top"></i>
+                <i className="bx bxs-hourglass-top"></i>
               )}
             </div>
           );
@@ -110,8 +171,8 @@ const Overview = () => {
         sort: true,
         customBodyRender: (value) => {
           return (
-            <div className={`${value === 1 ? "green" : "red"}`}>
-              {value === 1 ? "Come" : value === 2 ? "Not Come" : "-"}
+            <div className={`${value === true ? "green" : "red"}`}>
+              {value === true ? "Come" : value === false ? "Not Come" : "-"}
             </div>
           );
         },
@@ -121,7 +182,7 @@ const Overview = () => {
   const options = {
     filter: true,
     selectableRows: "none",
-    print:false,
+    print: false,
     onRowClick: null,
     jumpToPage: true,
     searchPlaceholder: "Search",
@@ -132,7 +193,10 @@ const Overview = () => {
       <Box>
         <Box style={{ position: "relative" }}>
           <Box onClick={(e) => onClickProgressBar()}>
-            <BorderLinearProgress variant="determinate" value={50} />
+            <BorderLinearProgress
+              variant="determinate"
+              value={(data?.finishCheckinAmount / data?.numberOfUser) * 100}
+            />
           </Box>
           <Typography
             style={{
@@ -145,7 +209,7 @@ const Overview = () => {
               transform: "translateX(-50%)",
             }}
           >
-            50%
+            {`${Number((data?.finishCheckinAmount / data?.numberOfUser)).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})}`}
           </Typography>
         </Box>
         <Typography
@@ -183,7 +247,7 @@ const Overview = () => {
         <ThemeProvider theme={theme}>
           <MUIDataTable
             title={"Checkin List"}
-            data={checkinData}
+            data={convertDataForTableUser(data?.medicalUserInformationList)}
             columns={columns}
             options={options}
           />

@@ -1,7 +1,7 @@
 [
     {
         "display_name": "Checkin Status",
-        "route": "/",
+        "route": "/checkin_status",
         "icon": "bx bx-pie-chart-alt"
     },
     {

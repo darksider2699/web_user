@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@material-ui/core/";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -7,8 +7,8 @@ import Select from '@material-ui/core/Select';
 
 
 const QuestionTab = ({ question }) => {
-  const [listAnswer, setListAnswer] = useState([...question.answers]);
-  const [correctAnswer, setCorrectAnswer] = useState(1);
+  const [listAnswer, setListAnswer] = useState([...question.answerList]);
+  const [correctAnswer, setCorrectAnswer] = useState(question.rightAnswer.id);
   const handleAnswerChange = (event) => {
     console.log( event.currentTarget.id);
     let type = event.currentTarget.getAttribute("name");
@@ -53,7 +53,7 @@ const QuestionTab = ({ question }) => {
       width={"50%"}
     >
       <TextField
-        defaultValue={question.question}
+        defaultValue={question.label}
         fullWidth
         multiline
         style={{ padding: "10px 10px 10px 10px" }}
@@ -61,7 +61,7 @@ const QuestionTab = ({ question }) => {
       />
       {listAnswer.map((answer) => {
         return (
-          <Box key={answer.value + "answer"}>
+          <Box key={answer.id + "answer"}>
             <Typography
               style={{ padding: "10px 10px 10px 10px" }}
             >{`Answer ${answer.value}`}</Typography>
@@ -74,7 +74,7 @@ const QuestionTab = ({ question }) => {
               />
               <Box
                 name="delete"
-                id={answer.value}
+                id={answer.id}
                 style={{
                   paddingTop: "20px",
                   color: "red",
@@ -100,7 +100,7 @@ const QuestionTab = ({ question }) => {
             
           >
            {listAnswer.map(index=>{
-             return <MenuItem value={index.value}>{index.label}</MenuItem>
+             return <MenuItem  key={index.id} value={index.id}>{index.label}</MenuItem>
            })}
           </Select>
         </FormControl>

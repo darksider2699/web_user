@@ -8,11 +8,10 @@ import MUIDataTable from "mui-datatables";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import user_testing_data from "../../assets/JsonData/covid_test_result.json";
-export default function CovidTest() {
-  const [data, setData] = useState();
+const CovidTest = () => {
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    console.log("HI")
     getAllTestResult((output) => {
       if (output) {
         setData(output);
@@ -27,7 +26,7 @@ export default function CovidTest() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLYXRyaW5hV2FnbmVyOCIsImlhdCI6MTY0MTE0NTc5NywiZXhwIjoxNjQxMjMyMTk3fQ.LFU3d6N0i9O3YOBloFlLqcvO9IkZOZ8XsWZdzQWjm2VofFxagJVg-rtHkoHEH5-A31jng0s9jjejgtHwjY9B8Q`,
+            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLYXRyaW5hV2FnbmVyOCIsImlhdCI6MTY0MTYzMzUyMiwiZXhwIjoxNjQxNzE5OTIyfQ.YgGuGTOwPSBYIzZ3PCCH3YJ88tCvnL18sTVtf3_b2rcdCI2_o73qMS_k2yi79H05tOAezx1Ne_B0Bny4GAD_3g`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
@@ -145,7 +144,7 @@ export default function CovidTest() {
   return (
     <Box display={"block"}>
       <Box style={{ height: "18vw", overflowY: "scroll" }}>
-        {data.map((index) => (
+        {data?.map((index) => (
           <TestResult
             key={index.id}
             onClickRow={onClickRow}
@@ -174,4 +173,4 @@ export default function CovidTest() {
   );
 };
 
-//export default CovidTest;
+export default CovidTest;

@@ -5,13 +5,17 @@ import Layout from "./components/layout/Layout.jsx";
 import "./assets/boxicons-2.0.7/css/boxicons.min.css";
 import "./assets/css/grid.css";
 import "./assets/css/index.css";
+import { Provider } from "react-redux";
+import store from "./store/store"
 
 document.title = "Web Admin";
 
 ReactDOM.render(
+  <Provider store={store}>
   <React.StrictMode>
     <Layout />
   </React.StrictMode>,
+  </Provider>,
   document.getElementById("root")
 );
 
