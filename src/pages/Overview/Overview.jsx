@@ -7,19 +7,28 @@ import checkinData from "../../assets/JsonData/check-inData.json";
 import MUIDataTable from "mui-datatables";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
+import {getAllMedicalInformation} from "../../store/slices/checkinSlice"
 import "./styles.css";
 
 const Overview = () => {
   const [data, setData] = useState();
+  const dispatch = useDispatch();
 
-  async function getAllMedicalInformation(resolve = () => {}) {
+  useEffect(() => {
+    console.log("Overview Hi!")
+    dispatch(
+      getAllMedicalInformation()
+    );
+  }, []);
+  async function getAllMedicalInformationSource(resolve = () => {}) {
     try {
       const response = await fetch(
         `http://localhost:8080/api/user/medical_user/daily_checkin/all`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLYXRyaW5hV2FnbmVyOCIsImlhdCI6MTY0MTYzMzUyMiwiZXhwIjoxNjQxNzE5OTIyfQ.YgGuGTOwPSBYIzZ3PCCH3YJ88tCvnL18sTVtf3_b2rcdCI2_o73qMS_k2yi79H05tOAezx1Ne_B0Bny4GAD_3g`,
+            Authorization: `Bearer ${ localStorage.getItem("token")}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
@@ -31,7 +40,7 @@ const Overview = () => {
   }
 
   useEffect(() => {
-    getAllMedicalInformation((output) => {
+    getAllMedicalInformationSource((output) => {
       if (output) {
         setData(output);
         console.log(output);

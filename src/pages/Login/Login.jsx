@@ -28,7 +28,7 @@ export default function Login() {
   const status = useSelector((state) => state.userStore.account);
 
   useEffect(() => {
-    if (status.success && status.current) history.push("/app");
+    if (status.success && status.current) history.push("/checkin_status");
   }, [status.success]);
 
   const {
@@ -64,7 +64,11 @@ export default function Login() {
         sm={1}
         md={5}
         component={Paper}
-        style={{margin:"auto", padding:"auto", background: 'rgb(63 81 181 / 4%)' }}
+        style={{
+          margin: "auto",
+          padding: "auto",
+          background: "rgb(63 81 181 / 4%)",
+        }}
       >
         <Box
           sx={{
@@ -82,47 +86,43 @@ export default function Login() {
             Sign in
           </Typography>
           <Box>
-            <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
+                defaultValue={""}
                 name="username"
                 control={control}
-                defaultValue=""
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <TextField
-                    className = {classes.input}
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoFocus
-                    {...field}
-                  />
+                    <TextField
+                      className={classes.input}
+                      margin="normal"
+                      required
+                      defaultValue={""}
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      name="username"
+                      autoFocus
+                      {...field}
+                    />
                 )}
               />
-              {errors.email && (
-                <p aria-roledescription="error" className={classes.error}>
-                  Email must be required
-                </p>
-              )}
               <Controller
                 name="password"
                 control={control}
-                defaultValue=""
+                defaultValue={""}
                 render={({ field }) => (
-                  <TextField
-                  className = {classes.input}
-                    margin="normal"
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    {...field}
-                  />
+                    <TextField
+                      className={classes.input}
+                      margin="normal"
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      {...field}
+                    />
                 )}
               />
               {errors.password && (
@@ -131,9 +131,11 @@ export default function Login() {
                 </p>
               )}
               <FormControlLabel
-                control={<Checkbox value="remember" style ={{color: "white"}} />}
+                control={
+                  <Checkbox value="remember" style={{ color: "white" }} />
+                }
                 label="Remember me"
-                style = {{color: "white"}}
+                style={{ color: "white" }}
               />
               <Button
                 type="submit"
@@ -144,8 +146,6 @@ export default function Login() {
                 Sign In
               </Button>
             </form>
-            <Grid container>
-            </Grid>
           </Box>
         </Box>
       </Grid>
@@ -162,7 +162,6 @@ const useStyle = makeStyles((theme) => ({
     backgroundSize: "cover",
     display: "flex",
     position: "relative",
-    
   },
   imgContent: {
     //alignSelf:"center",
@@ -174,6 +173,6 @@ const useStyle = makeStyles((theme) => ({
     transform: "scaleX(-1)",
   },
   input: {
-      backgroundColor: 'antiquewhite',
-  }
+    backgroundColor: "antiquewhite",
+  },
 }));

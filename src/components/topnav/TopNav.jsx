@@ -4,7 +4,6 @@ import Dropdown from "../dropdown/Dropdown";
 import notifications from "../../assets/JsonData/notification.json";
 import { Link } from "react-router-dom";
 const renderNotificationItem = (item, index) => {
-  console.log("Hello", item, index);
   return (
     <div className="notification-item" key={index}>
       <i className={item.icon}></i>

@@ -13,7 +13,6 @@ const clickOutsideRef = (content_ref, toggle_ref) => {
   });
 };
 const Dropdown = (props) => {
-  console.log("AAA", props.contentData);
   const dropdown_content_el = useRef(null);
   const dropdown_toggle_el = useRef(null);
   clickOutsideRef(dropdown_content_el, dropdown_toggle_el);

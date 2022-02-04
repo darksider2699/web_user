@@ -9,7 +9,7 @@ export const login = createAsyncThunk("user/login", async (param, thunkAPI) => {
       .then((res) => {
         console.log("res",res);
         localStorage.setItem("roles", JSON.stringify(res.roles));
-        localStorage.setItem("token", res.access_token);
+        localStorage.setItem("token", res.accessToken);
         cb();
         return res;
       })

@@ -30,7 +30,9 @@ export default class RequestHelper {
     };
   }
   static async get(apiUrl, params) {
+    console.log("Helper")
     const header = await this.getHeader();
+    console.log("header", header)
     return instance
       .get(apiUrl, {
         headers: header,
