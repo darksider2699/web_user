@@ -1,3 +1,23 @@
 ::-webkit-scrollbar {
     display: none;
   }
+  .submit-area{
+    box-shadow: var(--box-shadow);
+    margin: 10px 0 10px 0;
+    width: fit-content;
+    border-radius: 8px;
+    height: 40px;
+  }
+  .submit-text{
+    padding-left: 10px;
+    font-weight: 700;
+  }
+  .submit-button{
+    box-shadow:var(--box-shadow); 
+    background: #fff;
+    width: 100px;
+    height: 30px;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }

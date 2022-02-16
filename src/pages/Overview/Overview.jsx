@@ -3,76 +3,60 @@ import { withStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core/";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { Bar } from "react-chartjs-2";
-import checkinData from "../../assets/JsonData/check-inData.json";
+import moment from "moment";
 import MUIDataTable from "mui-datatables";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import {getAllMedicalInformation} from "../../store/slices/checkinSlice"
+import {
+  getAllMedicalInformation,
+  getCheckinByDate,
+} from "../../store/slices/checkinSlice";
 import "./styles.css";
-
 const Overview = () => {
   const [data, setData] = useState();
   const dispatch = useDispatch();
-
+  const [dateRecord, setDateRecord] = useState(moment(new Date()).format("YYYY-MM-DD"));
   useEffect(() => {
-    console.log("Overview Hi!")
-    dispatch(
-      getAllMedicalInformation()
-    );
-  }, []);
-  async function getAllMedicalInformationSource(resolve = () => {}) {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/user/medical_user/daily_checkin/all`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${ localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
-      const data_1 = await response.json();
-      resolve(data_1);
-    } catch (error) {}
-  }
+    dispatch(getAllMedicalInformation());
+    dispatch(getCheckinByDate({ dateRecord: dateRecord }));
+  }, [dateRecord]);
 
-  useEffect(() => {
-    getAllMedicalInformationSource((output) => {
-      if (output) {
-        setData(output);
-        console.log(output);
-      }
-    });
-  }, []);
+  const listCheckinByDate =
+    useSelector((state) => state.checkinListStore.checkinList.current) || [];
+  const medicalInformationDataList =
+    useSelector((state) => state.checkinListStore.medicalUserList.current) ||
+    [];
 
+  const convertJobTitle = (input) => {
+      let result = input?.map((value, index) => {
+        return value.name + " - level: " + value.level;
+      });
+      return result.map((item, index) => (index ? ', ': '') + item ).join("");
+    };
   const convertDataForTableUser = (input) => {
     let result = input?.map((value, index) => {
-      console.log(          new Date().getDate() ===  new Date(value.lastCheckin?.dateRecord).getDate() &&
-      new Date().getMonth() === new Date(value.lastCheckin?.dateRecord).getMonth() &&
-      new Date().getFullYear() === new Date(value.lastCheckin?.dateRecord).getFullYear()
-        ? value.lastCheckin?.isAllowToCome
-          ? true
-          : false
-        : false)
       return {
         name: value.user.lastName + " " + value.user.firstName,
-        jobTitle: value.user.companyUserInformation.jobTitles[0]?.name ? value.user.companyUserInformation.jobTitles[0]?.name : "--",
+        jobTitle: value.user.companyUserInformation.jobTitles[0]?.name
+          ? convertJobTitle(value.user.companyUserInformation.jobTitles)
+          : "--",
         department: value.user.companyUserInformation.department?.name
           ? value.user.companyUserInformation.department?.name
           : "--",
         phoneNumber: value.user.phoneNumber ? value.user.phoneNumber : "--",
         email: value.user.companyUserInformation.companyEmail,
         isCheckin:
-          new Date().getDate() === new Date(value.lastCheckin?.dateRecord).getDate() &&
-          new Date().getMonth() === new Date(value.lastCheckin?.dateRecord).getMonth() &&
-          new Date().getFullYear() === new Date(value.lastCheckin?.dateRecord).getFullYear(),
+          listCheckinByDate?.filter(
+            (index) => index.medicalUserInformation.id === value?.id
+          ).length > 0,
         result:
-          new Date().getDate() ===  new Date(value.lastCheckin?.dateRecord).getDate() &&
-          new Date().getMonth() === new Date(value.lastCheckin?.dateRecord).getMonth() &&
-          new Date().getFullYear() === new Date(value.lastCheckin?.dateRecord).getFullYear()
+          new Date().getDate() ===
+            new Date(value.lastCheckin?.dateRecord).getDate() &&
+          new Date().getMonth() ===
+            new Date(value.lastCheckin?.dateRecord).getMonth() &&
+          new Date().getFullYear() ===
+            new Date(value.lastCheckin?.dateRecord).getFullYear()
             ? value.lastCheckin?.isAllowToCome
               ? true
               : false
@@ -89,10 +73,13 @@ const Overview = () => {
         backgroundColor: "#62b4ff",
         borderColor: "#62b4ff",
         borderWidth: 2,
-        data: [65, 59, 80, 81, 30],
+        data: medicalInformationDataList?.checkinInWeekAmount,
       },
     ],
   };
+  const handleOnChangeDate = async (event) => {
+    await setDateRecord(event.target.value);
+  }
   let theme = createTheme();
   theme = responsiveFontSizes(theme);
 
@@ -204,7 +191,11 @@ const Overview = () => {
           <Box onClick={(e) => onClickProgressBar()}>
             <BorderLinearProgress
               variant="determinate"
-              value={(data?.finishCheckinAmount / data?.numberOfUser) * 100}
+              value={
+                (medicalInformationDataList?.finishCheckinAmount /
+                  medicalInformationDataList?.numberOfUser) *
+                100
+              }
             />
           </Box>
           <Typography
@@ -218,7 +209,13 @@ const Overview = () => {
               transform: "translateX(-50%)",
             }}
           >
-            {`${Number((data?.finishCheckinAmount / data?.numberOfUser)).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})}`}
+            {`${Number(
+              medicalInformationDataList?.finishCheckinAmount /
+                medicalInformationDataList?.numberOfUser
+            ).toLocaleString(undefined, {
+              style: "percent",
+              minimumFractionDigits: 2,
+            })}`}
           </Typography>
         </Box>
         <Typography
@@ -253,14 +250,29 @@ const Overview = () => {
         </Box>
       </Box>
       <Box marginLeft={0} display={isShowTable ? "block" : "none"}>
-        <ThemeProvider theme={theme}>
-          <MUIDataTable
-            title={"Checkin List"}
-            data={convertDataForTableUser(data?.medicalUserInformationList)}
-            columns={columns}
-            options={options}
-          />
-        </ThemeProvider>
+        <Box>
+          <div>
+            <label for="start">Date:</label>
+            <input
+              type="date"
+              id="date_select"
+              className = "date_select"
+              name="trip-start"
+              value={dateRecord}
+              onChange = {handleOnChangeDate}
+            />
+          </div>
+          <ThemeProvider theme={theme}>
+            <MUIDataTable
+              title={`Checkin List on ${dateRecord}`}
+              data={convertDataForTableUser(
+                medicalInformationDataList?.medicalUserInformationList
+              )}
+              columns={columns}
+              options={options}
+            />
+          </ThemeProvider>
+        </Box>
       </Box>
     </div>
   );

@@ -14,13 +14,83 @@ export const signInRequest = ({ username, password }) => {
     });
 };
 export const getAllMedicalInformationRequest = () => {
-  console.log("User api")
   return RequestHelper.get(`${apiUrl}/user/medical_user/daily_checkin/all`)
-  .then((res) => {
-    console.log("userApi calling", res)
-    return res
-  })
-  .catch((error) => {
-    throw new Error(error);
-  });
-}
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const getCheckinByDateRequest = (body) => {
+  return RequestHelper.post(`${apiUrl}/user/daily_checkin`, body)
+    .then((res) => {
+      console.log("Checkin by date", res.data)
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const getAllTestResultRequest = () => {
+  console.log("Get All TEst Result Request")
+  return RequestHelper.get(`${apiUrl}/test_result/all_result`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const getTestResultByDateRequest = (body) => {
+  return RequestHelper.post(`${apiUrl}/test_result`, body)
+    .then((res) => {
+      console.log("Test result by date", res.data)
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const addListTestResultRequest = ({listTestAdded}) => {
+  return RequestHelper.post(`${apiUrl}/user/medical_user/test_result`, listTestAdded)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const getAllQuestionRequest = () => {
+  console.log("Get All Question Request")
+  return RequestHelper.get(`${apiUrl}/question/all`)
+    .then((res) => {
+      console.log("res quest",res.data)
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const getQuestionByIdRequest = (id) => {
+  console.log("Get All Question Request")
+  return RequestHelper.get(`${apiUrl}/question/${id}`)
+    .then((res) => {
+      console.log("res quest",res.data)
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const editQuestionRequest = (id, label, answerRequest, rightAnswerPosition) => {
+  console.log({id, label, answerRequest, rightAnswerPosition})
+  return RequestHelper.put(`${apiUrl}/question/${id}`, {label: label, answerRequest: answerRequest, rightAnswerPosition: rightAnswerPosition})
+    .then((res) => {
+      console.log("res quest",res.data)
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};

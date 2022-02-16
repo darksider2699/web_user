@@ -1,37 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField } from "@material-ui/core/";
 import QuestionTab from "./QuestionTab/QuestionTab";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getAllQuestion } from "../../store/slices/questionSlice";
 const CheckInQuestion = () => {
-  const [data, setData] = useState([]);
-
+  const dispatch = useDispatch();
+  const allQuestion =
+    useSelector((state) => state.questionStore.questionList.current) || [];
   useEffect(() => {
-    getAllQuestion((output) => {
-      if (output) {
-        setData(output);
-        console.log(output);
-      }
-    }); 
+    dispatch(getAllQuestion());
   }, []);
-
-  async function getAllQuestion(resolve = () => {}) {
-    try {
-      const response = await fetch(`http://localhost:8080/api/question/all`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJLYXRyaW5hV2FnbmVyOCIsImlhdCI6MTY0MTYzMzUyMiwiZXhwIjoxNjQxNzE5OTIyfQ.YgGuGTOwPSBYIzZ3PCCH3YJ88tCvnL18sTVtf3_b2rcdCI2_o73qMS_k2yi79H05tOAezx1Ne_B0Bny4GAD_3g`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-      const data_1 = await response.json();
-      resolve(data_1);
-    } catch (error) {}
-  }
-
+  console.log("Question", allQuestion);
   return (
     <Box borderRadius={10} marginBottom={5}>
-      {data?.map((index) => {
+      {allQuestion?.map((index) => {
         return <QuestionTab question={index} key={index.id} />;
       })}
     </Box>

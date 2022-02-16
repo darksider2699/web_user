@@ -1,12 +1,10 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
-import {getAllMedicalInformationRequest} from "../../api";
+import {getAllMedicalInformationRequest, getCheckinByDateRequest} from "../../api";
 import { toast } from "react-toastify";
 
 export const getAllMedicalInformation = createAsyncThunk("checkin/getListCheckin", async () => {
-  console.log("Checkin Slices")
     const result = await getAllMedicalInformationRequest()
       .then((res) => {
-        console.log("res checkin Slice",res);
         return res;
       })
       .catch((message) => {
@@ -15,30 +13,57 @@ export const getAllMedicalInformation = createAsyncThunk("checkin/getListCheckin
       });
     return result;
   });
-  
+  export const getCheckinByDate = createAsyncThunk(
+    "user/getCheckinByDate",
+    async (param) => {
+      console.log("param", param)
+      const result = await getCheckinByDateRequest(param ? param : "")
+        .then((res) => res)
+        .catch((message) => message);
+      return result;
+    }
+  );
 
   const checkinSlice = createSlice({
     name: "checkinSlice",
     initialState:{
+      medicalUserList: {
+        current: {},
+        loading: false,
+        success: false,
+      },
       checkinList: {
         current: {},
         loading: false,
         success: false,
       }
+      
     },
     reducers: {},
     extraReducers:{
-      //checkinList
+      //medicalUserList
       [getAllMedicalInformation.pending]: (state, action) =>{
-        state.checkinList.loading = true;
+        state.medicalUserList.loading = true;
       },
       [getAllMedicalInformation.fulfilled]: (state, action) => {
-        state.checkinList.current = action.payload;
+        state.medicalUserList.current = action.payload;
+        state.medicalUserList.loading = false;
+        state.medicalUserList.success = true;
+      },
+      [getAllMedicalInformation.rejected]: (state, action) => {
+        state.medicalUserList.loading = false;
+        state.medicalUserList.success = false;
+      },
+      //Checkedin List
+      [getCheckinByDate.pending]: (state) => {
+        state.checkinList.loading = true;
+      },
+      [getCheckinByDate.fulfilled]: (state, action) => {
+        state.checkinList.current= action.payload;
         state.checkinList.loading = false;
         state.checkinList.success = true;
       },
-      [getAllMedicalInformation.rejected]: (state, action) => {
-        state.checkinList.current = {};
+      [getCheckinByDate.rejected]: (state) => {
         state.checkinList.loading = false;
         state.checkinList.success = false;
       },

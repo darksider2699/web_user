@@ -7,3 +7,9 @@
 .red{
     color: red;
 }
+.date_select{
+    margin-bottom: 10px;
+    margin-left: 10px;
+    background-color: #fff;
+    box-shadow:  var(--box-shadow);
+}
