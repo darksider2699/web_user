@@ -25,7 +25,7 @@ export const getAllMedicalInformationRequest = () => {
 export const getCheckinByDateRequest = (body) => {
   return RequestHelper.post(`${apiUrl}/user/daily_checkin`, body)
     .then((res) => {
-      console.log("Checkin by date", res.data)
+      console.log("Checkin by date", res.data);
       return res.data;
     })
     .catch((error) => {
@@ -33,7 +33,7 @@ export const getCheckinByDateRequest = (body) => {
     });
 };
 export const getAllTestResultRequest = () => {
-  console.log("Get All TEst Result Request")
+  console.log("Get All TEst Result Request");
   return RequestHelper.get(`${apiUrl}/test_result/all_result`)
     .then((res) => {
       return res.data;
@@ -45,15 +45,18 @@ export const getAllTestResultRequest = () => {
 export const getTestResultByDateRequest = (body) => {
   return RequestHelper.post(`${apiUrl}/test_result`, body)
     .then((res) => {
-      console.log("Test result by date", res.data)
+      console.log("Test result by date", res.data);
       return res.data;
     })
     .catch((error) => {
       throw new Error(error);
     });
 };
-export const addListTestResultRequest = ({listTestAdded}) => {
-  return RequestHelper.post(`${apiUrl}/user/medical_user/test_result`, listTestAdded)
+export const addListTestResultRequest = ({ listTestAdded }) => {
+  return RequestHelper.post(
+    `${apiUrl}/user/medical_user/test_result`,
+    listTestAdded
+  )
     .then((res) => {
       return res.data;
     })
@@ -62,10 +65,10 @@ export const addListTestResultRequest = ({listTestAdded}) => {
     });
 };
 export const getAllQuestionRequest = () => {
-  console.log("Get All Question Request")
+  console.log("Get All Question Request");
   return RequestHelper.get(`${apiUrl}/question/all`)
     .then((res) => {
-      console.log("res quest",res.data)
+      console.log("res quest", res.data);
       return res.data;
     })
     .catch((error) => {
@@ -73,24 +76,63 @@ export const getAllQuestionRequest = () => {
     });
 };
 export const getQuestionByIdRequest = (id) => {
-  console.log("Get All Question Request")
+  console.log("Get All Question Request");
   return RequestHelper.get(`${apiUrl}/question/${id}`)
     .then((res) => {
-      console.log("res quest",res.data)
+      console.log("res quest", res.data);
       return res.data;
     })
     .catch((error) => {
       throw new Error(error);
     });
 };
-export const editQuestionRequest = (id, label, answerRequest, rightAnswerPosition) => {
-  console.log({id, label, answerRequest, rightAnswerPosition})
-  return RequestHelper.put(`${apiUrl}/question/${id}`, {label: label, answerRequest: answerRequest, rightAnswerPosition: rightAnswerPosition})
+export const editQuestionRequest = (
+  id,
+  label,
+  answerRequest,
+  rightAnswerPosition
+) => {
+  console.log({ id, label, answerRequest, rightAnswerPosition });
+  return RequestHelper.put(`${apiUrl}/question/${id}`, {
+    label: label,
+    answerRequest: answerRequest,
+    rightAnswerPosition: rightAnswerPosition,
+  })
     .then((res) => {
-      console.log("res quest",res.data)
+      console.log("res quest", res.data);
       return res.data;
     })
     .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const createNewQuestionRequest = (
+  label,
+  answerRequest,
+  rightAnswerPosition
+) => {
+  console.log({ label, answerRequest, rightAnswerPosition });
+  return RequestHelper.post(`${apiUrl}/question/add_question`, {
+    label: label,
+    answerRequest: answerRequest,
+    rightAnswerPosition: rightAnswerPosition,
+  })
+    .then((res) => {
+      console.log("res quest", res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const deleteQuestionRequest = (id) => {
+  return RequestHelper.delete(`${apiUrl}/question/${id}`)
+    .then((res) => {
+      console.log("API RESPONSE:", res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      console.log("API RESPONSE ERROR:", error);
       throw new Error(error);
     });
 };

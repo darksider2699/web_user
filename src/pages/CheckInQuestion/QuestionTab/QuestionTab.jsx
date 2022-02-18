@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@material-ui/core/";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import {
-  editQuestion,
-} from "../../../store/slices/questionSlice"
+import { editQuestion, deleteQuestion } from "../../../store/slices/questionSlice";
 import YesNoModal from "../../../components/YesNoModal";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const QuestionTab = ({ question }) => {
+const QuestionTab = ({ question, type, onSave, onUpdateData }) => {
+  console.log({ type, question });
+  const idQuestion = question.id;
   const dispatch = useDispatch();
-  console.log("Question tab", question);
   const [listAnswer, setListAnswer] = useState([...question.answerList]);
-  const [correctAnswer, setCorrectAnswer] = useState(question.rightAnswer.id);
+  const [correctAnswer, setCorrectAnswer] = useState({
+    id: question.rightAnswer.id,
+  });
   const [isYesNoModalVisible, setIsYesNoModalVisible] = useState(false);
+  const [isYesNoModalDeleteQuestionVisible, setIsYesNoModalDeleteQuestionVisible] = useState(false);
   const [labelQuestion, setLabelQuestion] = useState(question.label);
   const handleAnswerChange = (event) => {
-    console.log(event.currentTarget.id);
+    console.log(event.currentTarget.type);
     let type = event.currentTarget.getAttribute("name");
     switch (type) {
       case "add":
@@ -32,7 +34,7 @@ const QuestionTab = ({ question }) => {
         console.log("event.currentTarget.id", event.currentTarget.id);
         let delArr = [...listAnswer];
         let indexDelete = delArr.findIndex(
-          (e) => e.id == event.currentTarget.id
+          (e) => e.id === event.currentTarget.id
         );
         delArr.splice(indexDelete, 1);
         console.log({ indexDelete, delArr });
@@ -40,24 +42,35 @@ const QuestionTab = ({ question }) => {
         break;
       case "save":
         setIsYesNoModalVisible(true);
-        console.log({correctAnswer})
+        console.log({
+          id: idQuestion,
+          label: labelQuestion,
+          answerRequest: listAnswer,
+          rightAnswerPosition: listAnswer.findIndex(
+            (index) => index.id === correctAnswer.id
+          ),
+        });
         break;
+        case "delete_question":
+          setIsYesNoModalDeleteQuestionVisible(true);
+          break;
       default:
         break;
     }
   };
   const handleChange = (event) => {
-    setCorrectAnswer({id: event.target.id});
+    console.log("Change select", event);
+    setCorrectAnswer({ id: event.target.value });
   };
   const handleEditTextfield = (event) => {
     console.log("Event", event.target?.value);
-    if (event.target.name == "answer") {
+    if (event.target.name === "answer") {
       let tempAnswerList = listAnswer;
       console.log("tempAnswerList", tempAnswerList);
       let indexObj = tempAnswerList.findIndex(
         (index) => index.id == event.target?.id
       );
-      console.log("event.target?.id", event.target);
+      console.log("event.target?.id", event.target.id);
       console.log("index obj", indexObj);
       console.log("tempAnswerList[indexObj]", tempAnswerList[indexObj].label);
       tempAnswerList[indexObj] = {
@@ -69,24 +82,52 @@ const QuestionTab = ({ question }) => {
       setLabelQuestion(event.target.value);
     }
   };
-  const handleConfirmChangeQuestion = async () => {
+  const handleConfirmDeleteQuestion = async () => {
     await dispatch(
-      editQuestion({
-        id: question.id,
-        label: labelQuestion,
-        answerRequest: listAnswer,
-        rightAnswerPosition: listAnswer.findIndex(
-          (index) => index.id == correctAnswer
-        ),
+      deleteQuestion({
+        id: idQuestion,
         cb: () => {
-          setTimeout(toast("Add list test result successfully!"), 3000);
+          toast("Delete success!");
         },
       })
     );
+    onUpdateData(idQuestion);
+    setIsYesNoModalDeleteQuestionVisible(false);
+  }
+  const handleConfirmChangeQuestion = async () => {
+    if (type === "update") {
+      await dispatch(
+        editQuestion({
+          id: idQuestion,
+          label: labelQuestion,
+          answerRequest: listAnswer,
+          rightAnswerPosition: listAnswer.findIndex(
+            (index) => index.id === correctAnswer.id
+          ),
+          cb: () => {
+          },
+        })
+      );
+      toast("Edit question successfully!")
+      setIsYesNoModalVisible(false);
+    } else if (type === "add") {
+      console.log("On OK",labelQuestion,
+      listAnswer,
+      correctAnswer.id,
+      listAnswer.findIndex(
+        (index) => index.id === correctAnswer.id));
+      onSave(
+        labelQuestion,
+        listAnswer,
+        listAnswer.findIndex(
+          (index) => index.id === correctAnswer.id
+        )
+      );
+    }
   };
   return (
     <Box
-      key={question.id + "box"}
+      key={idQuestion + "box"}
       bgcolor={"white"}
       borderRadius={10}
       marginBottom={5}
@@ -94,8 +135,24 @@ const QuestionTab = ({ question }) => {
       boxShadow={"rgba(149, 157, 165, 0.2) 0px 8px 24px"}
       justifyContent={"space-between"}
       display={"block"}
-      width={"50%"}
+      width={"80%"}
+      minWidth={"400px"}
+      minHeight={"300px"}
     >
+      <Box
+        name="delete_question"
+        type="delete_question"
+        style={{
+          paddingTop: "10px",
+          color: "red",
+          cursor: "pointer",
+          float:"right",
+          display: `${type === "update" ? 'block' : 'none'}`
+        }}
+        onClick={handleAnswerChange}
+      >
+        <i className="bx bxs-x-circle"></i>
+      </Box>
       <TextField
         value={labelQuestion}
         fullWidth
@@ -113,7 +170,7 @@ const QuestionTab = ({ question }) => {
             >{`Answer ${answer.id}`}</Typography>
             <Box display={"flex"}>
               <TextField
-                value={answer.label || "Add Answer Here..."}
+                value={answer.label}
                 fullWidth
                 name="answer"
                 id={answer.id + ""}
@@ -145,13 +202,13 @@ const QuestionTab = ({ question }) => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={correctAnswer}
+            value={correctAnswer.id}
             label="CorrectAnswer"
             onChange={handleChange}
           >
             {listAnswer.map((index) => {
               return (
-                <MenuItem key={index.id} value={index.id}>
+                <MenuItem key={index.id} value={index.id} name={index.id}>
                   {index.label}
                 </MenuItem>
               );
@@ -159,7 +216,7 @@ const QuestionTab = ({ question }) => {
           </Select>
         </FormControl>
       </Box>
-      <Box display={"flex"} justifyContent={"space-between"}>
+      <Box display={"flex"} justifyContent={"space-around"}>
         <Button
           variant="outlined"
           color="primary"
@@ -171,8 +228,11 @@ const QuestionTab = ({ question }) => {
         </Button>
         <Button
           variant="outlined"
-          color="secondary"
-          style={{ margin: "10px 25px 10px 10px " }}
+          style={{
+            margin: "10px 25px 10px 10px ",
+            height: "40px",
+            color: "green",
+          }}
           name="save"
           onClick={handleAnswerChange}
         >
@@ -180,6 +240,18 @@ const QuestionTab = ({ question }) => {
         </Button>
         <ToastContainer />
       </Box>
+      <YesNoModal
+        isModalVisible={isYesNoModalDeleteQuestionVisible}
+        hideModal={() => {}}
+        title={"Confirm"}
+        message={"Are you sure you want to delete this answer?"}
+        okText={"OK"}
+        cancelText={"Cancel"}
+        onCancel={() => {
+          setIsYesNoModalDeleteQuestionVisible(false);
+        }}
+        onOk={handleConfirmDeleteQuestion}
+      />
       <YesNoModal
         isModalVisible={isYesNoModalVisible}
         hideModal={() => {}}

@@ -5,6 +5,11 @@
         "icon": "bx bx-pie-chart-alt"
     },
     {
+        "display_name": "Checkout Status",
+        "route": "/checkout_status",
+        "icon": "bx bx-list-ol"
+    },
+    {
         "display_name": "Covid Test",
         "route": "/covid_test",
         "icon": "bx bx-test-tube"

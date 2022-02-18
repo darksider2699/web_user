@@ -14,7 +14,6 @@ import {
 } from "../../store/slices/checkinSlice";
 import "./styles.css";
 const Overview = () => {
-  const [data, setData] = useState();
   const dispatch = useDispatch();
   const [dateRecord, setDateRecord] = useState(moment(new Date()).format("YYYY-MM-DD"));
   useEffect(() => {
@@ -227,7 +226,7 @@ const Overview = () => {
             fontWeight: "700",
           }}
         >
-          Checkin Progress today (%)
+          Checkin Progress today(%)
         </Typography>
       </Box>
       <Box marginTop={3} marginBottom={3}>

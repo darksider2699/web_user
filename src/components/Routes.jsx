@@ -4,6 +4,7 @@ import CheckInQuestion from "../pages/CheckInQuestion/CheckInQuestion";
 import CovidTest from "../pages/CovidTest/CovidTest";
 import Overview from "../pages/Overview/Overview";
 import SituationsList from "../pages/SituationsList/SituationList";
+import Checkout from "../pages/Checkout/Checkout";
 const Routes = () => {
   return (
     <div>
@@ -12,7 +13,8 @@ const Routes = () => {
         <Route path="/covid_test" component={CovidTest} />
         <Route path="/questions" component={CheckInQuestion} />
         <Route path="/situations_list" component={SituationsList} />
-      </Switch>
+        <Route path="/checkout_status" component={Checkout}/>
+      </Switch> 
     </div>
   );
 };

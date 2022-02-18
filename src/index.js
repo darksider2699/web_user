@@ -12,9 +12,7 @@ document.title = "Web Admin";
 
 ReactDOM.render(
   <Provider store={store}>
-  <React.StrictMode>
     <Layout />
-  </React.StrictMode>,
   </Provider>,
   document.getElementById("root")
 );
