@@ -23,5 +23,10 @@
         "display_name": "Contact Tracing",
         "route": "/situations_list",
         "icon": "bx bx-info-circle"
+    },
+    {
+        "display_name": "Covid Information",
+        "route": "/covid_information",
+        "icon": "bx bxs-virus"
     }
 ]
