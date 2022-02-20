@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/userSlice"
-import checkinReducer from "./slices/checkinSlice"
+import checkinReducer from "./slices/medicalUserSlice"
 import covidTestReducer from "./slices/covidTestSlice"
 import questionReducer from "./slices/questionSlice"
 const rootReducer = {

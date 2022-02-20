@@ -11,11 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAllMedicalInformation,
   getCheckinByDate,
-} from "../../store/slices/checkinSlice";
+} from "../../store/slices/medicalUserSlice";
 import "./styles.css";
 const Overview = () => {
   const dispatch = useDispatch();
-  const [dateRecord, setDateRecord] = useState(moment(new Date()).format("YYYY-MM-DD"));
+  const [dateRecord, setDateRecord] = useState(
+    moment(new Date()).format("YYYY-MM-DD")
+  );
   useEffect(() => {
     dispatch(getAllMedicalInformation());
     dispatch(getCheckinByDate({ dateRecord: dateRecord }));
@@ -28,11 +30,11 @@ const Overview = () => {
     [];
 
   const convertJobTitle = (input) => {
-      let result = input?.map((value, index) => {
-        return value.name + " - level: " + value.level;
-      });
-      return result.map((item, index) => (index ? ', ': '') + item ).join("");
-    };
+    let result = input?.map((value, index) => {
+      return value.name + " - level: " + value.level;
+    });
+    return result.map((item, index) => (index ? ", " : "") + item).join("");
+  };
   const convertDataForTableUser = (input) => {
     let result = input?.map((value, index) => {
       return {
@@ -49,16 +51,21 @@ const Overview = () => {
           listCheckinByDate?.filter(
             (index) => index.medicalUserInformation.id === value?.id
           ).length > 0,
-        result:
-          new Date().getDate() ===
-            new Date(value.lastCheckin?.dateRecord).getDate() &&
-          new Date().getMonth() ===
-            new Date(value.lastCheckin?.dateRecord).getMonth() &&
-          new Date().getFullYear() ===
-            new Date(value.lastCheckin?.dateRecord).getFullYear()
-            ? value.lastCheckin?.isAllowToCome
-              ? true
-              : false
+        isComing:
+          listCheckinByDate?.filter(
+            (index) => index.medicalUserInformation.id === value?.id
+          ).length > 0
+            ? listCheckinByDate?.filter(
+                (index) => index.medicalUserInformation.id === value?.id
+              )[0].coming
+            : false,
+        isAllowToCome:
+          listCheckinByDate?.filter(
+            (index) => index.medicalUserInformation.id === value?.id
+          ).length > 0
+            ? listCheckinByDate?.filter(
+                (index) => index.medicalUserInformation.id === value?.id
+              )[0].allowTocome
             : false,
       };
     });
@@ -78,10 +85,17 @@ const Overview = () => {
   };
   const handleOnChangeDate = async (event) => {
     await setDateRecord(event.target.value);
-  }
-  let theme = createTheme();
-  theme = responsiveFontSizes(theme);
-
+  };
+  const myTheme = createTheme({
+    overrides: {
+      MUIDataTableBodyCell: {
+        root: {
+          backgroundColor: "#FF0000",
+          color:"red"
+        }
+      }
+    }
+  })
   const [isShowTable, setIsShowTable] = useState(false);
   const onClickProgressBar = () => {
     setIsShowTable(!isShowTable);
@@ -159,8 +173,8 @@ const Overview = () => {
       },
     },
     {
-      name: "result",
-      label: "Result",
+      name: "isComing",
+      label: "Is Coming?",
       options: {
         filter: true,
         sort: true,
@@ -168,6 +182,25 @@ const Overview = () => {
           return (
             <div className={`${value === true ? "green" : "red"}`}>
               {value === true ? "Come" : value === false ? "Not Come" : "-"}
+            </div>
+          );
+        },
+      },
+    },
+    {
+      name: "isAllowToCome",
+      label: "Is Allow To Come?",
+      options: {
+        filter: true,
+        sort: true,
+        customBodyRender: (value) => {
+          return (
+            <div className={`${value === true ? "green" : "red"}`}>
+              {value === true
+                ? "Allowed"
+                : value === false
+                ? "Not Allowed"
+                : "-"}
             </div>
           );
         },
@@ -255,13 +288,13 @@ const Overview = () => {
             <input
               type="date"
               id="date_select"
-              className = "date_select"
+              className="date_select"
               name="trip-start"
               value={dateRecord}
-              onChange = {handleOnChangeDate}
+              onChange={handleOnChangeDate}
             />
           </div>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={myTheme}>
             <MUIDataTable
               title={`Checkin List on ${dateRecord}`}
               data={convertDataForTableUser(

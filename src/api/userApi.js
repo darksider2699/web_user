@@ -32,6 +32,26 @@ export const getCheckinByDateRequest = (body) => {
       throw new Error(error);
     });
 };
+export const getCheckoutByDateRequest = (body) => {
+  return RequestHelper.post(`${apiUrl}/user/daily_checkout`, body)
+    .then((res) => {
+      console.log("checkout by date", res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+export const getCheckoutByDateAndIdUserRequest = (param) => {
+  return RequestHelper.post(`${apiUrl}/user/daily_checkout/${param.id}`, {dateRecord: param.dateRecord})
+    .then((res) => {
+      console.log("checkout by date and id", res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
 export const getAllTestResultRequest = () => {
   console.log("Get All TEst Result Request");
   return RequestHelper.get(`${apiUrl}/test_result/all_result`)
