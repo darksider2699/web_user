@@ -8,7 +8,7 @@ import "./assets/css/index.css";
 import { Provider } from "react-redux";
 import store from "./store/store"
 
-document.title = "Web Admin";
+document.title = "Web User";
 
 ReactDOM.render(
   <Provider store={store}>
