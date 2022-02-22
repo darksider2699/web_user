@@ -1,33 +1,8 @@
 [
     {
-        "display_name": "Checkin Status",
-        "route": "/checkin_status",
-        "icon": "bx bx-pie-chart-alt"
-    },
-    {
-        "display_name": "Checkout Status",
-        "route": "/checkout_status",
+        "display_name": "Checkin",
+        "route": "/checkin",
         "icon": "bx bx-list-ol"
-    },
-    {
-        "display_name": "Covid Test",
-        "route": "/covid_test",
-        "icon": "bx bx-test-tube"
-    },
-    {
-        "display_name": "Manage Question",
-        "route": "/questions",
-        "icon": "bx bx-task"
-    },
-    {
-        "display_name": "Contact Tracing",
-        "route": "/situations_list",
-        "icon": "bx bx-info-circle"
-    },
-    {
-        "display_name": "Covid Information",
-        "route": "/covid_information",
-        "icon": "bx bxs-virus"
     },
     {
         "display_name": "Account Information",

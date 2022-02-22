@@ -44,7 +44,7 @@ export default function Login() {
         username,
         password,
         cb: () => {
-          history.push("/checkin_status");
+          history.push("/checkin");
         },
       })
     );

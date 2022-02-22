@@ -1,314 +1,178 @@
 import React, { useState, useEffect } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { Box, Typography } from "@material-ui/core/";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import { Bar } from "react-chartjs-2";
-import moment from "moment";
-import MUIDataTable from "mui-datatables";
-import { ThemeProvider } from "@mui/styles";
-import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllMedicalInformation,
-  getCheckinByDate,
-} from "../../store/slices/medicalUserSlice";
+  getUserMedicalInformation,
+  addNewDailyCheckin,
+} from "../../store/slices/userSlice";
+import { getAllQuestion } from "../../store/slices/questionSlice";
+import { Box, Button, Typography } from "@material-ui/core/";
+import { useForm, Controller } from "react-hook-form";
+import YesNoModal from "../../components/YesNoModal";
+import moment from "moment";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./styles.css";
 const Overview = () => {
   const dispatch = useDispatch();
-  const [dateRecord, setDateRecord] = useState(
-    moment(new Date()).format("YYYY-MM-DD")
-  );
+  const [isConfirmAnswer, setIsConfirmAnswer] = useState(false);
+  const [answer, setAnswer] = useState();
   useEffect(() => {
-    dispatch(getAllMedicalInformation());
-    dispatch(getCheckinByDate({ dateRecord: dateRecord }));
-  }, [dateRecord]);
-
-  const listCheckinByDate =
-    useSelector((state) => state.checkinListStore.checkinList.current) || [];
-  const medicalInformationDataList =
-    useSelector((state) => state.checkinListStore.medicalUserList.current) ||
-    [];
-
-  const convertJobTitle = (input) => {
-    let result = input?.map((value, index) => {
-      return value.name + " - level: " + value.level;
-    });
-    return result.map((item, index) => (index ? ", " : "") + item).join("");
+    dispatch(getUserMedicalInformation());
+    dispatch(getAllQuestion());
+  }, []);
+  const dailyCheckinInformationList =
+    useSelector(
+      (state) =>
+        state.userStore.medicalUserInformation.current
+          .dailyCheckinInformationList
+    ) || [];
+  const allQuestion =
+    useSelector((state) => state.questionStore.questionList.current) || [];
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm({});
+  let sortedDailyCheckinInformationList = [...dailyCheckinInformationList];
+  sortedDailyCheckinInformationList.sort(function compare(a, b) {
+    var dateA = new Date(a.dateRecord);
+    var dateB = new Date(b.dateRecord);
+    return dateB - dateA;
+  });
+  const onSubmit = (data) => {
+    console.log("data", Object.values(data));
+    setAnswer(Object.values(data));
+    setIsConfirmAnswer(true);
   };
-  const convertDataForTableUser = (input) => {
-    let result = input?.map((value, index) => {
-      return {
-        name: value.user.lastName + " " + value.user.firstName,
-        jobTitle: value.user.companyUserInformation.jobTitles[0]?.name
-          ? convertJobTitle(value.user.companyUserInformation.jobTitles)
-          : "--",
-        department: value.user.companyUserInformation.department?.name
-          ? value.user.companyUserInformation.department?.name
-          : "--",
-        phoneNumber: value.user.phoneNumber ? value.user.phoneNumber : "--",
-        email: value.user.companyUserInformation.companyEmail,
-        isCheckin:
-          listCheckinByDate?.filter(
-            (index) => index.medicalUserInformation.id === value?.id
-          ).length > 0,
-        isComing:
-          listCheckinByDate?.filter(
-            (index) => index.medicalUserInformation.id === value?.id
-          ).length > 0
-            ? listCheckinByDate?.filter(
-                (index) => index.medicalUserInformation.id === value?.id
-              )[0].coming
-            : false,
-        isAllowToCome:
-          listCheckinByDate?.filter(
-            (index) => index.medicalUserInformation.id === value?.id
-          ).length > 0
-            ? listCheckinByDate?.filter(
-                (index) => index.medicalUserInformation.id === value?.id
-              )[0].allowTocome
-            : false,
-      };
-    });
-    return result;
-  };
-  const state = {
-    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    datasets: [
-      {
-        label: "Checkin Progress This Week (%)",
-        backgroundColor: "#62b4ff",
-        borderColor: "#62b4ff",
-        borderWidth: 2,
-        data: medicalInformationDataList?.checkinInWeekAmount,
-      },
-    ],
-  };
-  const handleOnChangeDate = async (event) => {
-    await setDateRecord(event.target.value);
-  };
-  const myTheme = createTheme({
-    overrides: {
-      MUIDataTableBodyCell: {
-        root: {
-          backgroundColor: "#FF0000",
-          color:"red"
-        }
-      }
-    }
-  })
-  const [isShowTable, setIsShowTable] = useState(false);
-  const onClickProgressBar = () => {
-    setIsShowTable(!isShowTable);
-  };
-  const BorderLinearProgress = withStyles((theme) => ({
-    root: {
-      height: 40,
-    },
-    colorPrimary: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
-    },
-    bar: {
-      backgroundColor: "#1a90ff",
-    },
-  }))(LinearProgress);
-  const columns = [
-    {
-      name: "name",
-      label: "Name",
-      options: {
-        filter: false,
-        sort: true,
-      },
-    },
-    {
-      name: "jobTitle",
-      label: "Job Title",
-      options: {
-        filter: true,
-        sort: true,
-      },
-    },
-    {
-      name: "department",
-      label: "Department",
-      options: {
-        filter: true,
-        sort: true,
-      },
-    },
-    {
-      name: "phoneNumber",
-      label: "Phone Number",
-      options: {
-        filter: false,
-        sort: true,
-      },
-    },
-    {
-      name: "email",
-      label: "Email",
-      options: {
-        filter: false,
-        sort: true,
-      },
-    },
-    {
-      name: "isCheckin",
-      label: "Checkin Status",
-      options: {
-        filter: true,
-        sort: true,
-        customBodyRender: (value) => {
-          return (
-            <div className={`${value === true ? "green" : "red"}`}>
-              {value === true ? (
-                <i className="bx bx-check-circle"></i>
-              ) : (
-                <i className="bx bxs-hourglass-top"></i>
-              )}
-            </div>
-          );
+  const handleAddNewDailyCheckin = async () => {
+    console.log("Check", checkAnswer());
+    await dispatch(
+      addNewDailyCheckin({
+        isComing: true,
+        isAllowToCome: checkAnswer(),
+        dateRecord: moment(new Date()).format("YYYY-MM-DD"),
+        cb: () => {
+          toast("Add new daily checkin success!");
+          setIsConfirmAnswer(false);
+          dispatch(getUserMedicalInformation());
         },
-      },
-    },
-    {
-      name: "isComing",
-      label: "Is Coming?",
-      options: {
-        filter: true,
-        sort: true,
-        customBodyRender: (value) => {
-          return (
-            <div className={`${value === true ? "green" : "red"}`}>
-              {value === true ? "Come" : value === false ? "Not Come" : "-"}
-            </div>
-          );
-        },
-      },
-    },
-    {
-      name: "isAllowToCome",
-      label: "Is Allow To Come?",
-      options: {
-        filter: true,
-        sort: true,
-        customBodyRender: (value) => {
-          return (
-            <div className={`${value === true ? "green" : "red"}`}>
-              {value === true
-                ? "Allowed"
-                : value === false
-                ? "Not Allowed"
-                : "-"}
-            </div>
-          );
-        },
-      },
-    },
-  ];
-  const options = {
-    filter: true,
-    selectableRows: "none",
-    print: false,
-    onRowClick: null,
-    jumpToPage: true,
-    searchPlaceholder: "Search",
-    //count, // Use total number of items
+      })
+    );
   };
-  console.log("Local storage", listCheckinByDate)
-  return (
-    <div>
-      <Box>
-        <Box style={{ position: "relative" }}>
-          <Box onClick={(e) => onClickProgressBar()}>
-            <BorderLinearProgress
-              variant="determinate"
-              value={
-                (medicalInformationDataList?.finishCheckinAmount /
-                  medicalInformationDataList?.numberOfUser) *
-                100
-              }
-            />
-          </Box>
-          <Typography
-            style={{
-              position: "absolute",
-              color: "black",
-              top: 6,
-              left: "50%",
-              fontSize: "16px",
-              fontWeight: "700",
-              transform: "translateX(-50%)",
-            }}
-          >
-            {`${Number(
-              medicalInformationDataList?.finishCheckinAmount /
-                medicalInformationDataList?.numberOfUser
-            ).toLocaleString(undefined, {
-              style: "percent",
-              minimumFractionDigits: 2,
-            })}`}
-          </Typography>
-        </Box>
-        <Typography
-          style={{
-            textAlign: "center",
-            color: "black",
-            top: 6,
-            fontSize: "16px",
-            fontWeight: "700",
-          }}
-        >
-          Checkin Progress today(%)
+  const checkAnswer = () => {
+    return (
+      JSON.stringify(answer) ==
+      JSON.stringify(allQuestion.map((index) => index.rightAnswer.id + ""))
+    );
+  };
+  const lastRecord = sortedDailyCheckinInformationList[0];
+  console.log("aa", lastRecord);
+  const isCheckedin = () => {
+    let lastCheckin = moment(new Date(lastRecord?.dateRecord)).format(
+      "YYYY-MM-DD"
+    );
+    let today = moment(new Date()).format("YYYY-MM-DD");
+    console.log("inside function", lastCheckin,today);
+    return lastCheckin === today;
+  };
+  console.log("isCheckedin?", isCheckedin());
+  if (!isCheckedin()) {
+    return (
+      <div>
+        <Typography align="center" variant="h4">
+          Please Answer These Questions:
         </Typography>
+        <Typography align="center" style={{ color: "red" }} gutterBottom>
+          Warning: Declaring false information is a violation of Vietnamese law
+          and may result in criminal prosecution!
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {allQuestion.map((index) => {
+            return (
+              <Box
+                key={index.id}
+                sx={{ p: 2, border: "1px dashed grey" }}
+                marginBottom={5}
+              >
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">{index.label}</FormLabel>
+                  <Controller
+                    rules={{ required: true }}
+                    control={control}
+                    name={index.id + ""}
+                    render={({ field }) => {
+                      return (
+                        <RadioGroup {...field}>
+                          {index.answerList.map((answer) => {
+                            return (
+                              <FormControlLabel
+                                value={answer.id || ""}
+                                key={answer.id + ""}
+                                control={<Radio />}
+                                label={answer.label}
+                              />
+                            );
+                          })}
+                        </RadioGroup>
+                      );
+                    }}
+                  />
+                </FormControl>
+              </Box>
+            );
+          })}
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ margin: "10px 0 20px 0px " }}
+            type="submit"
+          >
+            {" "}
+            Submit
+          </Button>
+        </form>
+        <YesNoModal
+          isModalVisible={isConfirmAnswer}
+          hideModal={() => {}}
+          title={"Confirm"}
+          message={"Are you sure you want to submit your daily checkin?"}
+          okText={"OK"}
+          cancelText={"Cancel"}
+          onCancel={() => {
+            setIsConfirmAnswer(false);
+          }}
+          onOk={handleAddNewDailyCheckin}
+        />
+        <ToastContainer />
+      </div>
+    );
+  } else if (lastRecord.allowToCome) {
+    return (
+      <Box textAlign={"center"}>
+        <i
+          class="bx bx-check-circle bx-flashing"
+          style={{ fontSize: "200px", textAlign: "center", color: "green", marginBottom:'20px' }}
+        ></i>
+        <Typography align="center" variant="h3">You are good to go. See you at the office</Typography>
       </Box>
-      <Box marginTop={3} marginBottom={3}>
-        <Box width={"90%"} paddingLeft={"10%"}>
-          <Bar
-            data={state}
-            options={{
-              title: {
-                display: true,
-                text: "Checkin Progress Status Recently",
-                fontSize: 20,
-              },
-              legend: {
-                display: true,
-                position: "right",
-              },
-              maintainAspectRatio: true,
-            }}
-          />
-        </Box>
+    );
+  }
+  else {
+    return (
+      <Box textAlign={"center"}>
+        <i
+          class="bx bxs-x-circle bx-flashing"
+          style={{ fontSize: "200px", textAlign: "center", color: "red", marginBottom:'20px' }}
+        ></i>
+        <Typography align="center" variant="h3">Sorry, you can't come to the office to day. Keep tracking your health!</Typography>
       </Box>
-      <Box marginLeft={0} display={isShowTable ? "block" : "none"}>
-        <Box>
-          <div>
-            <label for="start">Date:</label>
-            <input
-              type="date"
-              id="date_select"
-              className="date_select"
-              name="trip-start"
-              value={dateRecord}
-              onChange={handleOnChangeDate}
-            />
-          </div>
-          <ThemeProvider theme={myTheme}>
-            <MUIDataTable
-              title={`Checkin List on ${dateRecord}`}
-              data={convertDataForTableUser(
-                medicalInformationDataList?.medicalUserInformationList
-              )}
-              columns={columns}
-              options={options}
-            />
-          </ThemeProvider>
-        </Box>
-      </Box>
-    </div>
-  );
+    );
+  }
 };
 
 export default Overview;

@@ -1,64 +1,116 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
-import {signInRequest} from "../../api";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  signInRequest,
+  getUserMedicalInformationRequest,
+  addNewDailyCheckinRequest,
+} from "../../api";
 import { toast } from "react-toastify";
 
 export const login = createAsyncThunk("user/login", async (param, thunkAPI) => {
-    const { username, password, cb } = param;
-    const result = await signInRequest({ username, password, cb })
+  const { username, password, cb } = param;
+  const result = await signInRequest({ username, password, cb })
+    .then((res) => {
+      console.log("res", res);
+      localStorage.setItem("roles", JSON.stringify(res.roles));
+      localStorage.setItem("token", res.accessToken);
+      localStorage.setItem("idUser", res.id);
+      cb();
+      return res;
+    })
+    .catch((message) => {
+      toast.error("Login Fail. Check Your Network !");
+      throw new Error(message);
+    });
+  return result;
+});
+
+export const logout = createAsyncThunk("user/logout", async () => {
+  localStorage.removeItem("roles");
+  localStorage.removeItem("token");
+});
+export const getUserMedicalInformation = createAsyncThunk(
+  "account/getUserMedicalInformation",
+  async () => {
+    console.log("User slice");
+    const result = await getUserMedicalInformationRequest()
       .then((res) => {
-        console.log("res",res);
-        localStorage.setItem("roles", JSON.stringify(res.roles));
-        localStorage.setItem("token", res.accessToken);
-        cb();
         return res;
       })
       .catch((message) => {
-        toast.error("Login Fail. Check Your Network !");
+        toast.error("Get Data Fail. Check Your Network !");
         throw new Error(message);
       });
     return result;
-  });
-  
-  export const logout = createAsyncThunk("user/logout", async () => {
-    localStorage.removeItem("roles");
-    localStorage.removeItem("token");
-  });
-
-  const userSlice = createSlice({
-    name: "userSlice",
-    initialState:{
-      account: {
-        current: {},
-        loading: false,
-        success: false,
-      }
+  }
+);
+export const addNewDailyCheckin = createAsyncThunk(
+  "dailyCheckin/addNewDailyCheckin",
+  async (param) => {
+    console.log("Add new checkin slice", param);
+    const result = await addNewDailyCheckinRequest(param)
+      .then((res) => {
+        param.cb();
+        return res;
+      })
+      .catch((message) => {
+        toast.error("Get Data Fail. Check Your Network !");
+        throw new Error(message);
+      });
+    return result;
+  }
+);
+const userSlice = createSlice({
+  name: "userSlice",
+  initialState: {
+    account: {
+      current: {},
+      loading: false,
+      success: false,
     },
-    reducers: {},
-    extraReducers:{
-      //login
-      [login.pending]: (state, action) =>{
-        state.account.loading = true;
-      },
-      [login.fulfilled]: (state, action) => {
-        state.account.current = action.payload;
-        state.account.loading = false;
-        state.account.success = true;
-      },
-      [login.rejected]: (state, action) => {
-        state.account.current = {};
-        state.account.loading = false;
-        state.account.success = false;
-      },
+    medicalUserInformation: {
+      current: {},
+      loading: false,
+      success: false,
+    },
+  },
+  reducers: {},
+  extraReducers: {
+    //login
+    [login.pending]: (state, action) => {
+      state.account.loading = true;
+    },
+    [login.fulfilled]: (state, action) => {
+      state.account.current = action.payload;
+      state.account.loading = false;
+      state.account.success = true;
+    },
+    [login.rejected]: (state, action) => {
+      state.account.current = {};
+      state.account.loading = false;
+      state.account.success = false;
+    },
 
-      //logout
-      [logout.fulfilled]: (state, action) => {
-        state.account.current = {};
-        state.account.loading = false;
-        state.account.success = false;
-      },
-    }
-  })
+    //logout
+    [logout.fulfilled]: (state, action) => {
+      state.account.current = {};
+      state.account.loading = false;
+      state.account.success = false;
+    },
+    [getUserMedicalInformation.pending]: (state, action) => {
+      state.medicalUserInformation.loading = true;
+    },
+    [getUserMedicalInformation.fulfilled]: (state, action) => {
+      state.medicalUserInformation.current = action.payload;
+      state.medicalUserInformation.loading = false;
+      state.medicalUserInformation.success = true;
+    },
+    [getUserMedicalInformation.rejected]: (state, action) => {
+      state.medicalUserInformation.loading = false;
+      state.medicalUserInformation.success = false;
+    },
+  },
+});
 
-  const {reducer, actions} = userSlice;
-  export const {} = actions;
-  export default reducer
+const { reducer, actions } = userSlice;
+export const {} = actions;
+export default reducer;
