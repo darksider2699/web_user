@@ -3,6 +3,7 @@ import {
   signInRequest,
   getUserMedicalInformationRequest,
   addNewDailyCheckinRequest,
+  getAllCompanyUserInformationRequest
 } from "../../api";
 import { toast } from "react-toastify";
 
@@ -59,6 +60,20 @@ export const addNewDailyCheckin = createAsyncThunk(
     return result;
   }
 );
+export const getAllCompanyUserInformation = createAsyncThunk(
+  "user/listCompanyUserInformation",
+  async () => {
+    const result = await getAllCompanyUserInformationRequest()
+      .then((res) => {
+        return res;
+      })
+      .catch((message) => {
+        toast.error("Get Data Fail. Check Your Network !");
+        throw new Error(message);
+      });
+    return result;
+  }
+);
 const userSlice = createSlice({
   name: "userSlice",
   initialState: {
@@ -72,6 +87,11 @@ const userSlice = createSlice({
       loading: false,
       success: false,
     },
+    listCompanyUserInformation: {
+      current: [],
+      loading: false,
+      success: false
+    }
   },
   reducers: {},
   extraReducers: {
@@ -107,6 +127,18 @@ const userSlice = createSlice({
     [getUserMedicalInformation.rejected]: (state, action) => {
       state.medicalUserInformation.loading = false;
       state.medicalUserInformation.success = false;
+    },
+    [getAllCompanyUserInformation.pending]: (state, action) => {
+      state.listCompanyUserInformation.loading = true;
+    },
+    [getAllCompanyUserInformation.fulfilled]: (state, action) => {
+      state.listCompanyUserInformation.current = action.payload;
+      state.listCompanyUserInformation.loading = false;
+      state.listCompanyUserInformation.success = true;
+    },
+    [getAllCompanyUserInformation.rejected]: (state, action) => {
+      state.listCompanyUserInformation.loading = false;
+      state.listCompanyUserInformation.success = false;
     },
   },
 });

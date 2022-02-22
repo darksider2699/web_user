@@ -65,3 +65,12 @@ export const addNewDailyCheckinRequest = (param) => {
       throw new Error(error);
     });
 };
+export const getAllCompanyUserInformationRequest = () => {
+  return RequestHelper.get(`${apiUrl}/user/company_user/all`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};

@@ -5,6 +5,11 @@
         "icon": "bx bx-list-ol"
     },
     {
+        "display_name": "Checkout",
+        "route": "/checkout",
+        "icon": "bx bx-task"
+    },
+    {
         "display_name": "Account Information",
         "route": "/account",
         "icon": "bx bxs-user-account"
