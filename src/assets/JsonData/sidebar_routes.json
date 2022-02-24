@@ -10,6 +10,21 @@
         "icon": "bx bx-task"
     },
     {
+        "display_name": "Vaccine Status",
+        "route": "/vaccine",
+        "icon": "bx bx-info-circle"
+    },
+    {
+        "display_name": "Covid Cases",
+        "route": "/covid_case",
+        "icon": "bx bxs-virus"
+    },
+    {
+        "display_name": "Covid Information",
+        "route": "/information",
+        "icon": "bx bx-news"
+    },
+    {
         "display_name": "Account Information",
         "route": "/account",
         "icon": "bx bxs-user-account"

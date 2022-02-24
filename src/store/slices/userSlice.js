@@ -3,7 +3,10 @@ import {
   signInRequest,
   getUserMedicalInformationRequest,
   addNewDailyCheckinRequest,
-  getAllCompanyUserInformationRequest
+  getAllCompanyUserInformationRequest,
+  addNewDailyCheckoutRequest,
+  addNewVaccineShotRequest,
+  deleteVaccineShotRequest,
 } from "../../api";
 import { toast } from "react-toastify";
 
@@ -74,6 +77,57 @@ export const getAllCompanyUserInformation = createAsyncThunk(
     return result;
   }
 );
+export const addNewDailyCheckout = createAsyncThunk(
+  "user/addDailyCheckout",
+  async ({ dateRecord, listIdContactToday, cb }) => {
+    console.log("add new request", { dateRecord, listIdContactToday, cb });
+    const result = await addNewDailyCheckoutRequest({
+      dateRecord,
+      listIdContactToday,
+    })
+      .then((res) => {
+        cb();
+        return res;
+      })
+      .catch((message) => {
+        toast.error("Get Data Fail. Check Your Network !");
+        throw new Error(message);
+      });
+    return result;
+  }
+);
+export const addNewVaccineShot = createAsyncThunk(
+  "user/addDailyCheckout",
+  async ({ date, type, cb }) => {
+    console.log("add new request", { date, type });
+    const result = await addNewVaccineShotRequest({ date, type })
+      .then((res) => {
+        cb();
+        return res;
+      })
+      .catch((message) => {
+        toast.error("Get Data Fail. Check Your Network !");
+        throw new Error(message);
+      });
+    return result;
+  }
+);
+export const deleteVaccineShot = createAsyncThunk(
+  "user/addDailyCheckout",
+  async ({ id, cb }) => {
+    console.log("add new request", { id });
+    const result = await deleteVaccineShotRequest({ id })
+      .then((res) => {
+        cb();
+        return res;
+      })
+      .catch((message) => {
+        toast.error("Get Data Fail. Check Your Network !");
+        throw new Error(message);
+      });
+    return result;
+  }
+);
 const userSlice = createSlice({
   name: "userSlice",
   initialState: {
@@ -90,8 +144,8 @@ const userSlice = createSlice({
     listCompanyUserInformation: {
       current: [],
       loading: false,
-      success: false
-    }
+      success: false,
+    },
   },
   reducers: {},
   extraReducers: {
