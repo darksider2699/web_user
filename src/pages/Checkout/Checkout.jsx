@@ -18,8 +18,10 @@ export default function Login() {
   const [selectedRows, setSelectedRows] = useState();
   const [isOpenYesNoModal, setIsOpenYesNoModal] = useState(false);
   useEffect(() => {
-    const tempArr = [...localStorage.getItem("list_draft").split(",")];
-    setSelectedRows(tempArr);
+    if (!!localStorage.getItem("list_draft")) {
+      const tempArr = [...localStorage.getItem("list_draft")?.split(",")];
+      setSelectedRows(tempArr);
+    }
   }, []);
   const listUser = useSelector(
     (state) => state.userStore.listCompanyUserInformation.current
@@ -87,6 +89,7 @@ export default function Login() {
           toast("Add new daily checkout success!");
           setIsOpenYesNoModal(false);
           dispatch(getUserMedicalInformation());
+          localStorage.removeItem("list_draft");
         },
       })
     );
@@ -162,7 +165,12 @@ export default function Login() {
   } else {
     return (
       <Box>
-        <Typography align="center" variant="h4" style={{ color: "green" }} gutterBottom>
+        <Typography
+          align="center"
+          variant="h4"
+          style={{ color: "green" }}
+          gutterBottom
+        >
           You finished your checkout process. You can check all your daily
           checkout down below
         </Typography>

@@ -31,6 +31,10 @@ const Overview = () => {
         state.userStore.medicalUserInformation.current
           .dailyCheckinInformationList
     ) || [];
+    const user =   useSelector(
+      (state) =>
+        state.userStore.medicalUserInformation.current
+    ) || [];
   const allQuestion =
     useSelector((state) => state.questionStore.questionList.current) || [];
   const {
@@ -80,7 +84,7 @@ const Overview = () => {
     console.log("inside function", lastCheckin,today);
     return lastCheckin === today;
   };
-  console.log("isCheckedin?", isCheckedin());
+  console.log("isCheckedin?", user);
   if (!isCheckedin()) {
     return (
       <div>
@@ -151,7 +155,7 @@ const Overview = () => {
         <ToastContainer />
       </div>
     );
-  } else if (lastRecord.allowToCome) {
+  } else if (lastRecord.allowToCome && user.status > 1) {
     return (
       <Box textAlign={"center"}>
         <i

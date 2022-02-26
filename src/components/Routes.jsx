@@ -5,6 +5,7 @@ import Checkout from "../pages/Checkout/Checkout"
 import VaccineListInformation from "../pages/VaccineListInformation/VaccineListInformation";
 import CovidInformation from "../pages/CovidInformation/CovidInformation";
 import SituationList from "../pages/SituationsList/SituationList"
+import AccountInformation from "../pages/AccountInformation/AccountInformation";
 const Routes = () => {
    function isLoggedIn() {
     return !!localStorage.getItem('token')
@@ -18,6 +19,7 @@ const Routes = () => {
         <Route path="/vaccine" component={VaccineListInformation} />
         <Route path="/information" component={CovidInformation} />
         <Route path="/covid_case" component={SituationList} />
+        <Route path="/account" component={AccountInformation} />
         <Route
                 exact
                 path="/"

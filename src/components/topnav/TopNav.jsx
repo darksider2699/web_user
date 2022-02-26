@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./topnav.css";
 import Dropdown from "../dropdown/Dropdown";
-import notifications from "../../assets/JsonData/notification.json";
 import { Link } from "react-router-dom";
 import { Box, Button, Typography } from "@material-ui/core/";
 import { logout } from "../../store/slices/userSlice";
@@ -22,7 +21,7 @@ const TopNav = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserMedicalInformation());
-  }, []);
+  },[]);
   const covidStatus =
     useSelector((state) => state.userStore.medicalUserInformation.current) ||
     [];
@@ -34,6 +33,9 @@ const TopNav = () => {
   return (
     <div className="topnav">
       <div className="topnav__right">
+        <div className="topnav__right-item" style = {{marginRight:'20px'}}>
+        <Typography>{`Hello, ${covidStatus?.user?.account?.username}`}</Typography>
+        </div>
         <div
           className="topnav__right-item-warning"
           style={{ display: `${covidStatus.status < 2 ? "flex" : "none"}` }}
