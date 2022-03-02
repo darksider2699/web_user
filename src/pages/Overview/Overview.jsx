@@ -20,6 +20,7 @@ import "./styles.css";
 const Overview = () => {
   const dispatch = useDispatch();
   const [isConfirmAnswer, setIsConfirmAnswer] = useState(false);
+  const [isConfirmStayAtHome, setIsConfirmStayAtHome] = useState(false);
   const [answer, setAnswer] = useState();
   useEffect(() => {
     dispatch(getUserMedicalInformation());
@@ -31,10 +32,9 @@ const Overview = () => {
         state.userStore.medicalUserInformation.current
           .dailyCheckinInformationList
     ) || [];
-    const user =   useSelector(
-      (state) =>
-        state.userStore.medicalUserInformation.current
-    ) || [];
+  const user =
+    useSelector((state) => state.userStore.medicalUserInformation.current) ||
+    [];
   const allQuestion =
     useSelector((state) => state.questionStore.questionList.current) || [];
   const {
@@ -68,6 +68,24 @@ const Overview = () => {
       })
     );
   };
+  const handleSubmitStayAtHome = async () => {
+    console.log("Check", checkAnswer());
+    await dispatch(
+      addNewDailyCheckin({
+        isComing: false,
+        isAllowToCome: false,
+        dateRecord: moment(new Date()).format("YYYY-MM-DD"),
+        cb: () => {
+          toast("Add new daily checkin success!");
+          setIsConfirmAnswer(false);
+          dispatch(getUserMedicalInformation());
+        },
+      })
+    );
+  };
+  const handleConfirmStayHome = () => {
+    setIsConfirmStayAtHome(true);
+  };
   const checkAnswer = () => {
     return (
       JSON.stringify(answer) ==
@@ -81,13 +99,22 @@ const Overview = () => {
       "YYYY-MM-DD"
     );
     let today = moment(new Date()).format("YYYY-MM-DD");
-    console.log("inside function", lastCheckin,today);
+    console.log("inside function", lastCheckin, today);
     return lastCheckin === today;
   };
-  console.log("isCheckedin?", user);
+  console.log("isCheckedin?", lastRecord?.coming);
   if (!isCheckedin()) {
     return (
       <div>
+        <Button
+          variant="outlined"
+          color="primary"
+          style={{ margin: "10px 0 20px 0px " }}
+          onClick={handleConfirmStayHome}
+        >
+          {" "}
+          I will not come to the office today!
+        </Button>
         <Typography align="center" variant="h4">
           Please Answer These Questions:
         </Typography>
@@ -152,28 +179,70 @@ const Overview = () => {
           }}
           onOk={handleAddNewDailyCheckin}
         />
+        <YesNoModal
+          isModalVisible={isConfirmStayAtHome}
+          hideModal={() => {}}
+          title={"Confirm"}
+          message={"Are you sure you want to stay at home today?"}
+          okText={"OK"}
+          cancelText={"Cancel"}
+          onCancel={() => {
+            setIsConfirmAnswer(false);
+          }}
+          onOk={handleSubmitStayAtHome}
+        />
         <ToastContainer />
       </div>
+    );
+  } else if (!lastRecord.coming) {
+    return (
+      <Box textAlign={"center"}>
+        <i
+          class="bx bx-home-heart"
+          style={{
+            fontSize: "200px",
+            textAlign: "center",
+            color: "green",
+            marginBottom: "20px",
+          }}
+        ></i>
+        <Typography align="center" variant="h3">
+          Stay strong and see you later!
+        </Typography>
+      </Box>
     );
   } else if (lastRecord.allowToCome && user.status > 1) {
     return (
       <Box textAlign={"center"}>
         <i
           class="bx bx-check-circle bx-flashing"
-          style={{ fontSize: "200px", textAlign: "center", color: "green", marginBottom:'20px' }}
+          style={{
+            fontSize: "200px",
+            textAlign: "center",
+            color: "green",
+            marginBottom: "20px",
+          }}
         ></i>
-        <Typography align="center" variant="h3">You are good to go. See you at the office</Typography>
+        <Typography align="center" variant="h3">
+          You are good to go. See you at the office
+        </Typography>
       </Box>
     );
-  }
-  else {
+  } else {
     return (
       <Box textAlign={"center"}>
         <i
           class="bx bxs-x-circle bx-flashing"
-          style={{ fontSize: "200px", textAlign: "center", color: "red", marginBottom:'20px' }}
+          style={{
+            fontSize: "200px",
+            textAlign: "center",
+            color: "red",
+            marginBottom: "20px",
+          }}
         ></i>
-        <Typography align="center" variant="h3">Sorry, you can't come to the office to day. Keep tracking your health!</Typography>
+        <Typography align="center" variant="h3">
+          Sorry, you can't come to the office to day. Keep tracking your health!
+        </Typography>
       </Box>
     );
   }

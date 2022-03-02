@@ -17,6 +17,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState();
   const [isOpenYesNoModal, setIsOpenYesNoModal] = useState(false);
+  const idUser = localStorage.getItem('idUser')
   useEffect(() => {
     if (!!localStorage.getItem("list_draft")) {
       const tempArr = [...localStorage.getItem("list_draft")?.split(",")];
@@ -55,7 +56,7 @@ export default function Login() {
     });
     return result;
   };
-  const listData = convertDataForTableUser(listUser);
+  const listData = convertDataForTableUser(listUser.filter(index => index.id != idUser));
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "username", headerName: "Username", width: 130 },
@@ -110,7 +111,7 @@ export default function Login() {
     console.log("inside function", lastCheckout, today);
     return lastCheckout === today;
   };
-  console.log(isCheckedout());
+  console.log("AA", listData, idUser)
   if (!isCheckedout()) {
     return (
       <div>

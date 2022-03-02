@@ -67,7 +67,7 @@ export default function Login() {
         style={{
           margin: "auto",
           padding: "auto",
-          background: "rgb(63 81 181 / 4%)",
+          background: "#fff",
         }}
       >
         <Box

@@ -13,6 +13,14 @@ const Situation = ({ patientData }) => {
   const [isShowTable, setIsShowTable] = useState(false);
   const columns = [
     {
+      name: "username",
+      label: "Username",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
       name: "name",
       label: "Name",
       options: {
@@ -87,6 +95,7 @@ const Situation = ({ patientData }) => {
   const convertDataForTableUser = (input) => {
     let result = input?.map((value, index) => {
       return {
+        username: value.user.account.username,
         name: value.user.lastName + " " + value.user.firstName,
         jobTitle: value.user.companyUserInformation.jobTitles[0]?.name
           ? convertJobTitle(value.user.companyUserInformation.jobTitles)

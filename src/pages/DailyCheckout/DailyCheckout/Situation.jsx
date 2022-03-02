@@ -4,6 +4,7 @@ import moment from "moment";
 import MUIDataTable from "mui-datatables";
 import { ThemeProvider } from "@mui/styles";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import "./styles.css";
 const DailyCheckout = ({data}) => {
   console.log("data",data.contact)
   let theme = createTheme();
@@ -49,6 +50,31 @@ const DailyCheckout = ({data}) => {
         sort: true,
       },
     },
+    {
+      name: "status",
+      label: "Covid Status",
+      options: {
+        filter: false,
+        sort: true,
+        customBodyRender: (value) => {
+          return (
+            <div
+              className={`${
+                value === 0 ? "red" : value === 1 ? "yellow" : "green"
+              }`}
+            >
+              {value === 0 ? (
+                <div>F0</div>
+              ) : value === 1 ? (
+                <div>F1</div>
+              ) : (
+                <div>Safe</div>
+              )}
+            </div>
+          );
+        },
+      },
+    }
   ];
   const options = {
     filter: true,
@@ -80,6 +106,7 @@ const DailyCheckout = ({data}) => {
           : "--",
         phoneNumber: value.user.phoneNumber ? value.user.phoneNumber : "--",
         email: value.user.companyUserInformation.companyEmail,
+        status: value.status,
       };
     });
     return result;
